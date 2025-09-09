@@ -21,7 +21,7 @@ int main(){
     THIRTY_SEVEN_PERCENT = 0.37;        // Multiplier for 37%
 
     // Define variable as double float datatype
-    double tax, userIncome, standardDeduction, taxableIncome, taxAmount;    
+    double standardDeduction, taxableIncome, userIncome, income, taxAmount;   
     // Define variables as string datatype 
     string userStatus, filingStatus;    
 
@@ -29,89 +29,168 @@ int main(){
     cout << "Enter the gross income in dollars:\n";
     cin >> userIncome;
     // Prompt user to enter filing status and store in variable userStatus
-    cout << "Enter the filing status:\n";
+    cout << "Enter the filing status:\nS - Single\nH - Head of Household\nJ - Married Filing Jointly\nP - Married Filing Separately\n";
     cin >> userStatus;
+    userStatus = userStatus;
 
     if (userStatus == "S"){
-        filingStatus = "Single";
+        filingStatus = "S - Single";
         standardDeduction = 14600;
-        if (0 <= userIncome < 11601){
-            tax = TEN_PERCENT;
-        } else if (11601 <= userIncome < 47151){
-            tax = TWELVE_PERCENT;
-        } else if (47151 <= userIncome < 100526){
-            tax = TWENTY_TWO_PERCENT;
-        } else if (100526 <= userIncome < 191951){
-            tax = TWENTY_FOUR_PERCENT;
-        } else if (191951 <= userIncome < 243726){
-            tax = THIRTY_TWO_PERCENT;
-        } else if (243726 <= userIncome < 609351){
-            tax = THIRTY_FIVE_PERCENT;
-        } else if (userIncome >= 609351){
-            tax = THIRTY_SEVEN_PERCENT;
+        taxAmount = TEN_PERCENT*11600;
+        income = userIncome - standardDeduction - 11600;
+        if ((0 < income) && (income <= 35550)){
+            taxAmount += TWELVE_PERCENT*income;
+        } else {
+            taxAmount += TWELVE_PERCENT*35550;
+            income -= 35550;
+            if ((0 < income) && (income <= 53375)){
+                taxAmount += TWENTY_TWO_PERCENT*income;
+            } else {
+                taxAmount += TWENTY_TWO_PERCENT*53375;
+                income -= 53375;
+                if ((0 < income) && (income <= 91425)){
+                    taxAmount += TWENTY_FOUR_PERCENT*income;
+                } else {
+                    taxAmount += TWENTY_FOUR_PERCENT*91425;
+                    income -= 91425;
+                    if((0 < income) && (income <= 51775)){
+                        taxAmount += THIRTY_TWO_PERCENT*income;
+                    } else {
+                        taxAmount += THIRTY_TWO_PERCENT*51775;
+                        income -= 51775;
+                        if((0 < income) && (income <= 365625)){
+                            taxAmount += THIRTY_FIVE_PERCENT*income;
+                        } else {
+                            taxAmount += THIRTY_FIVE_PERCENT*365625;
+                            income -= 365625;
+                            if(income >= 0){
+                                taxAmount += THIRTY_SEVEN_PERCENT*income;
+                            }
+                        }
+                    }
+                }
+            }
         }
     } else if (userStatus == "H"){
-        filingStatus = "Head of Household";
-        standardDeduction = 21900;
-        if (0 <= userIncome < 16551){
-            tax = TEN_PERCENT;
-        } else if (16551 <= userIncome < 63101){
-            tax = TWELVE_PERCENT;
-        } else if (63101 <= userIncome < 100501){
-            tax = TWENTY_TWO_PERCENT;
-        } else if (100501 <= userIncome < 191951){
-            tax = TWENTY_FOUR_PERCENT;
-        } else if (191951 <= userIncome < 243701){
-            tax = THIRTY_TWO_PERCENT;
-        } else if (243701 <= userIncome < 609351){
-            tax = THIRTY_FIVE_PERCENT;
-        } else if (userIncome >= 609351){
-            tax = THIRTY_SEVEN_PERCENT;
+        filingStatus = "H - Head of Household";
+        standardDeduction = 23625;
+        taxAmount = TEN_PERCENT* 16550;
+        income = userIncome - standardDeduction - 16550;
+        if ((0 < income) && (income <= 46550)){
+            taxAmount += TWELVE_PERCENT*income;
+        } else {
+            taxAmount += TWELVE_PERCENT*46550;
+            income -= 46550;
+            if ((0 < income) && (income <= 37400)){
+                taxAmount += TWENTY_TWO_PERCENT*income;
+            } else {
+                taxAmount += TWENTY_TWO_PERCENT*37400;
+                income -= 37400;
+                if ((0 < income) && (income <= 91450)){
+                    taxAmount += TWENTY_FOUR_PERCENT*income;
+                } else {
+                    taxAmount += TWENTY_FOUR_PERCENT*91450;
+                    income -= 91450;
+                    if ((0 < income) && (income <= 51750)){
+                        taxAmount += THIRTY_TWO_PERCENT*income;
+                    } else {
+                        taxAmount += THIRTY_TWO_PERCENT*51750;
+                        income -= 51750;
+                        if ((0 < income) && (income <= 365650)){
+                            taxAmount += THIRTY_FIVE_PERCENT*income;
+                        } else {
+                            taxAmount += THIRTY_FIVE_PERCENT*365650;
+                            income -= 365650;
+                            if(income > 0){
+                                taxAmount = taxAmount + THIRTY_SEVEN_PERCENT*income;
+                            }
+                        }
+                    }
+                }
+            }
         }
     } else if (userStatus == "J"){
-        filingStatus = "Married Filing Jointly";
+        filingStatus = "J - Married Filing Jointly";
         standardDeduction = 29200;
-        if (0 <= userIncome < 23201){
-            tax = TEN_PERCENT;
-        } else if (23201 <= userIncome < 94301){
-            tax = TWELVE_PERCENT;
-        } else if (94301 <= userIncome < 201051){
-            tax = TWENTY_TWO_PERCENT;
-        } else if (201051 <= userIncome < 383901){
-            tax = TWENTY_FOUR_PERCENT;
-        } else if (383901 <= userIncome < 487451){
-            tax = THIRTY_TWO_PERCENT;
-        } else if (userIncome >= 487451){
-            tax = THIRTY_FIVE_PERCENT;
+        taxAmount = TEN_PERCENT*23200;
+        income = userIncome - standardDeduction - 23200;
+            if ((0 < income) && (income <= 71100)){
+                taxAmount += TWELVE_PERCENT*71100;
+                income -= 71100;
+                if ((0 < income) && (income <= 106750)){
+                    taxAmount += TWENTY_TWO_PERCENT*income;
+                } else {
+                    taxAmount += TWENTY_TWO_PERCENT*106750;
+                    income -= 106750;
+                    if ((0 < income) && (income <= 182850)){
+                        taxAmount += TWENTY_FOUR_PERCENT*income;
+                    } else {
+                        taxAmount += TWENTY_FOUR_PERCENT*182850;
+                        income -= 182850;
+                        if((0 < income) && (income <= 103550)){
+                            taxAmount += THIRTY_TWO_PERCENT*income;
+                        } else {
+                            taxAmount += THIRTY_TWO_PERCENT*103550;
+                            income -= 103550;
+                            if((0 < income) && (income <= 243750)){
+                                taxAmount += THIRTY_FIVE_PERCENT*income;
+                            } else {
+                                taxAmount += THIRTY_FIVE_PERCENT*243750;
+                                income -= 243750;
+                                if(income > 0){
+                                    taxAmount += THIRTY_SEVEN_PERCENT*income;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (userStatus == "P"){
+        filingStatus = "P - Married Filing Separately";
+        standardDeduction = 15750;
+        taxAmount = TEN_PERCENT*11600;
+        income = userIncome - standardDeduction - 11600;
+        if ((0 < income) && (income <= 35550)){
+            taxAmount += TWELVE_PERCENT*income;
+        } else {
+            taxAmount += TWELVE_PERCENT*35550;
+            income -= 35550;
+            if ((0 < income) && (income <= 53375)){
+                taxAmount += TWENTY_TWO_PERCENT*income;
+            } else {
+                taxAmount += TWENTY_TWO_PERCENT*53375;
+                income -= 53375;
+                if ((0 < income) && (income <= 91425)){
+                    taxAmount += TWENTY_FOUR_PERCENT*income;
+                } else {
+                    taxAmount += TWENTY_FOUR_PERCENT*91425;
+                    income -= 91425;
+                    if((0 < income) && (income <= 51775)){
+                        taxAmount += THIRTY_TWO_PERCENT*income;
+                    } else {
+                        taxAmount += THIRTY_TWO_PERCENT*51775;
+                        income -= 51775;
+                        if((0 < income) && (income <= 121875)){
+                            taxAmount += THIRTY_FIVE_PERCENT*income;
+                        } else {
+                            taxAmount += THIRTY_FIVE_PERCENT*121875;
+                            income -= 121875;
+                            if(income > 0){
+                                taxAmount = taxAmount + THIRTY_SEVEN_PERCENT*income;
+                            }
+                        }
+                    }
+                }
+            }
         }
-    } else if (userStatus == "P"){
-        filingStatus = "Married Filing Separately";
-        standardDeduction = 14600;
-        if (0 <= userIncome < 11601){
-            tax = TEN_PERCENT;
-        } else if (11601 <= userIncome < 47151){
-            tax = TWELVE_PERCENT;
-        } else if (47151 <= userIncome < 100526){
-            tax = TWENTY_TWO_PERCENT;
-        } else if (100526 <= userIncome < 191951){
-            tax = TWENTY_FOUR_PERCENT;
-        } else if (191951 <= userIncome < 243726){
-            tax = THIRTY_TWO_PERCENT;
-        } else if (243726 <= userIncome < 365601){
-            tax = THIRTY_FIVE_PERCENT;
-        } else if (userIncome >= 365601){
-            tax = THIRTY_SEVEN_PERCENT;
-        }
+    }
+    if (userIncome < standardDeduction){
+            standardDeduction = 0;
+            taxAmount = TEN_PERCENT*userIncome;
     }
 
-    if (userIncome < standardDeduction){
-        standardDeduction = 0;
-    }
-        
     // Calculate taxable income
     taxableIncome = userIncome - standardDeduction;
-    // Calculate tax amount
-    taxAmount = tax * taxableIncome;
 
     cout << "Gross income: $" << fixed << setprecision(2) << userIncome << endl 
     << "Filing status: " << filingStatus 
