@@ -26,7 +26,7 @@ int main(){
     SINGLE_BRACKET4 = 91425,                        // 24% bracket for single
     SINGLE_BRACKET5 = 51775,                        // 32% bracket for single
     SINGLE_BRACKET6 = 365625,                       // 35% bracket for single
-    STANDARD_DEDUCTION_HOUSEHOLD = 23625,           // Standard deduction for head of household
+    STANDARD_DEDUCTION_HOUSEHOLD = 21900,           // Standard deduction for head of household
     HOUSEHOLD_BRACKET1 = 16550,                     // 10% bracket for head of household
     HOUSEHOLD_BRACKET2 = 46550,                     // 12% bracket for head of household
     HOUSEHOLD_BRACKET3 = 37400,                     // 22% bracket for head of household

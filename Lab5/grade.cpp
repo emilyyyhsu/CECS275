@@ -50,5 +50,12 @@ int main(){
         letterGrade = 'F';
     }
     
-    cout << fixed << setprecision(2) << labScore << " " << quizScore << " " << midterm1 << " " << midterm2 << " " << projectScore << " " << finalExam << " " << totalGrade << endl << letterGrade;
+    cout << "Project: " << fixed << setprecision(2) << projectScore << "%\n"
+    << "Labs: " << labScore << "%\n"
+    << "Quiz: " << quizScore << "%\n"
+    << "Exam 1: " << midterm1 << "%\n"
+    << "Exam 2: " << midterm2 << "%\n"
+    << "Final Exam: " << finalExam << "%\n"
+    << "Total: " << totalGrade << "%\n"
+    << "Final Letter Grade: " << letterGrade << endl;
 }
