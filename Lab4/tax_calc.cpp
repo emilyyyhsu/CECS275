@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ int main(){
     char status;
     double grossIncome;
 
-    while(input std::operator>> status std::operator>> grossIncome){
+    while(input >> status >> grossIncome){
         cout << "S - Single" << endl;
         cout << "J - Married Jointly" << endl;
         cout << "Enter your filing status: " << status << endl;
