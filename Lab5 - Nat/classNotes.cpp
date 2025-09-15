@@ -3,7 +3,7 @@
 using namespace std;
 
 // function prototypes
-void generateScores(ofstream& out, int amount); 
+void generateScores(ofstream& out, int amount, int maxPossibleScore); 
 void generateMaxScores(ofstream& out, int maxScore, int amount);
 
 int main(){
@@ -33,13 +33,14 @@ int main(){
 
     out << endl;
 
-    generateScores(out, LAB_AMOUNT); // Labs
-    generateScores(out, QUIZ_AMOUNT); // Quizzes
-    generateScores(out, MIDTERM_AMOUNT); // Midterms
-    generateScores(out, PROJECT_AMOUNT); // Projects
-    generateScores(out, FINAL_EXAM_AMOUNT); // Final
+    generateScores(out, LAB_AMOUNT, MAX_LAB_SCORE); // Labs
+    generateScores(out, QUIZ_AMOUNT, MAX_QUIZ_SCORE); // Quizzes
+    generateScores(out, MIDTERM_AMOUNT, MAX_MIDTERM_SCORE); // Midterms
+    generateScores(out, PROJECT_AMOUNT, MAX_MIDTERM_SCORE); // Projects
+    generateScores(out, FINAL_EXAM_AMOUNT, MAX_FINAL_EXAM_SCORE); // Final
 
     out.close();
+    cout << "File generated!" << endl;
     return 0;
 }
 
@@ -49,8 +50,8 @@ void generateMaxScores(ofstream& out, int maxScore, int amount){
     }
 }
 
-void generateScores(ofstream& out, int amount){
-    int min = 0, max = 101;
+void generateScores(ofstream& out, int amount, int maxPossibleScore){
+    int min = 0, max = maxPossibleScore;
     for(int i = 0; i < amount; i++){
         out << min + rand() % (max - min + 1) << " ";
     }
