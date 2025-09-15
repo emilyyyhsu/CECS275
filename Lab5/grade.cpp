@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -10,7 +11,6 @@ int main(){
     string username, password, maxPossibleScores, actualScores, letterGrade;
     int i, lab, quiz;
     double labScore, quizScore, midterm1, midterm2, projectScore, finalExam, totalGrade;
-
 
     while(userScores >> lab >> quiz >> midterm1 >> midterm2 >> projectScore >> finalExam){
         cout << "Enter your username:\n" << username << endl;
