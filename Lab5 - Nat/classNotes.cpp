@@ -9,6 +9,8 @@ void generateMaxScores(ofstream& out, int maxScore, int amount);
 int main(){
     ofstream out;
     out.open("randomlyGenerated.txt");
+    srand(time(0)); // Ensures that each randomly generated attempt is different
+
     // srand(time(0)); // time() makes it actually random
     // cout << rand() % 30 << endl;  // %21 fives you 0-20
     // to generate between a range:
@@ -51,7 +53,7 @@ void generateMaxScores(ofstream& out, int maxScore, int amount){
 }
 
 void generateScores(ofstream& out, int amount, int maxPossibleScore){
-    int min = 0, max = maxPossibleScore;
+    int min = maxPossibleScore - 5, max = maxPossibleScore;
     for(int i = 0; i < amount; i++){
         out << min + rand() % (max - min + 1) << " ";
     }
