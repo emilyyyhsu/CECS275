@@ -3,12 +3,13 @@
  * @author: Natasha Kho
  * @author: Emily Hsu
  * Created on: 2025-09-11
- * Last Modified: 2025-09-12
+ * Last Modified: 2025-09-15
  * Reference: 
 */
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <ostream>
 #include <string>
 
 using namespace std;
@@ -16,7 +17,8 @@ using namespace std;
 // Grade weights
 const double TEN_PERCENT = 0.10,
             FIFTEEN_PERCENT = 0.15,
-            TWENTY_PERCENT = 0.20;
+            TWENTY_PERCENT = 0.20,
+            FORTY_PERCENT = 0.40;
 
 // Converts fractional value to percentage
 const int TO_PERCENT = 100;
@@ -34,11 +36,12 @@ int main(){
     fstream file;
 
     // Amount of assignments in each category
-    int labAmount, quizAmount, midtermAmount, projectAmount, finalExamAmount;
+    int labAmount, quizAmount, midtermAmount, 
+        projectAmount, finalExamAmount;
 
     // Points earned in each category
     double projectGrade = 0, labGrade = 0, quizGrade = 0, 
-    examOneGrade = 0, examTwoGrade = 0, finalExamGrade = 0; 
+    examGrade = 0, finalExamGrade = 0; 
     
     // Points possible in each category
     double totalGrade = 0, labTotal = 0, quizTotal = 0, 
@@ -99,47 +102,61 @@ int main(){
     // =============================================
     // Second line of file
     // Adds numbers together for actual score
+
+    cout << "=========================================================\n"
+    << fixed << setprecision(2) << "Hello " << username << "!\n";
+
     score = 0;
     for(int i = 0; i < labAmount; i++){
         file >> score;
         labGrade += score;
     }
+    cout << "Labs: " << (labGrade/labTotal) 
+    * FIFTEEN_PERCENT * TO_PERCENT << "%" << endl;
+
 
     score = 0;
     for(int i = 0; i < quizAmount; i++){
         file >> score;
         quizGrade += score;
     }
+    cout << "Quizzes: " << (quizGrade/quizTotal) 
+    * FIFTEEN_PERCENT * TO_PERCENT << "%" <<  endl;
 
     score = 0;
-    file >> score;
-    examOneGrade += score;
-
-    score = 0;
-    file >> score;
-    examTwoGrade += score;
+    for(int i = 0; i < midtermAmount; i++){
+        file >> score;
+        examGrade += score;
+    }
+    cout << "Exams: " << (examGrade/(examTotal) 
+    * FORTY_PERCENT * TO_PERCENT) <<  "%" << endl;
     
     score = 0;
     for(int i = 0; i < projectAmount; i++){
         file >> score;
         projectGrade += score;
     }
+    cout << "Projects: " << (projectGrade/projectTotal) 
+    * TEN_PERCENT * TO_PERCENT << "%" <<  endl;
 
     score = 0;
     file >> score;
     finalExamGrade += score;
+    cout << "Final Exam: " << (finalExamGrade/finalExamTotal) 
+    * TWENTY_PERCENT * TO_PERCENT << "%" <<  endl;
 
     // =============================================
 
     // Calculate total grade based on weights
     labGrade = (labGrade/labTotal) * FIFTEEN_PERCENT;
     quizGrade = (quizGrade/quizTotal) * FIFTEEN_PERCENT;
-    examOneGrade = (examOneGrade/(examTotal/midtermAmount)) * TWENTY_PERCENT;
-    examTwoGrade = (examTwoGrade/(examTotal/midtermAmount)) * TWENTY_PERCENT;
+    examGrade = (examGrade/examTotal) * FORTY_PERCENT;
     projectGrade = (projectGrade/projectTotal) * TEN_PERCENT; 
     finalExamGrade = (finalExamGrade/finalExamTotal) * TWENTY_PERCENT;
-    totalGrade = labGrade + quizGrade + examOneGrade + examTwoGrade 
+    totalGrade = labGrade + quizGrade + examGrade
                 + projectGrade + finalExamGrade;
+
+    cout << "Total: " << totalGrade * TO_PERCENT << "%" << endl;
 
     // Determine letter grade
     if (totalGrade >= GradeA) {
@@ -153,16 +170,5 @@ int main(){
     } else {
         letterGrade = 'F';
     }
-
-    // Output results
-    cout << "=========================================================\n"
-    << fixed << setprecision(2) << "Hello " << username << "!\n"
-    << "Project: " <<  projectGrade * TO_PERCENT / TEN_PERCENT << "%\n"
-    << "Labs: " << labGrade * TO_PERCENT / FIFTEEN_PERCENT << "%\n"
-    << "Quiz: " << quizGrade * TO_PERCENT / FIFTEEN_PERCENT << "%\n"
-    << "Exam 1: " << examOneGrade * TO_PERCENT / TWENTY_PERCENT << "%\n"
-    << "Exam 2: " << examTwoGrade * TO_PERCENT / TWENTY_PERCENT << "%\n"
-    << "Final Exam: " << finalExamGrade * TO_PERCENT / TWENTY_PERCENT << "%\n"
-    << "Total: " << totalGrade * TO_PERCENT << "%\n"
-    << "Final Letter Grade: " << letterGrade << endl;
+    cout << "Final Letter Grade: " << letterGrade << endl;
 }
