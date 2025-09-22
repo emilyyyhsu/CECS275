@@ -96,7 +96,6 @@ void generateReport(string fileName){
     generateScores(out, MIDTERM_AMOUNT, MAX_MIDTERM_SCORE); // Midterms
     generateScores(out, PROJECT_AMOUNT, MAX_MIDTERM_SCORE); // Projects
     generateScores(out, FINAL_EXAM_AMOUNT, MAX_FINAL_EXAM_SCORE); // Final
-
+    
     out.close();
-    cout << fileName << " generated!" << endl;
 }
