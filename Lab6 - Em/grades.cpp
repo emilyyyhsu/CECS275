@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include "grades.h"
 
 using namespace std;
 
@@ -28,12 +29,17 @@ const double GradeA = 0.90,
              GradeD = 0.60;
 
 // Function prototypes
-void generateGradeReport(fstream& file);
+void printMenu(int userSelect);
+void generateReport(string fileName);
+void printResults(double projectGrade, double labGrade, double quizGrade, double examGrade, double finalGrade, double totalGrade, char letterGrade);
 
 int main (void){
     fstream inFile;
+    int userSelect;
+    string fileName;
     inFile.open("text.txt");
-    generateGradeReport(inFile);
+    printMenu(userSelect);
+    generateReport(fileName);
 }
 
 /*
@@ -50,11 +56,11 @@ int getTotalAssignments(fstream& file){
 
 /*
  * @author: Emily Hsu
- * @param: 
- * @param: 
- * @return 
+ * @param: filestream file variable
+ * @param: amount of assignments to iterate through
+ * @return total score of one category of assignment with the lowest grade dropped
 */
-double dropLowestQuiz(fstream& file, int iterationAmount){
+double dropLowestScore(fstream& file, int iterationAmount){
     int score1 = 0, score2 = 0;
     double total = 0;
     file >> score1;
@@ -126,8 +132,8 @@ void generateGradeReport(fstream& file){
     int finalAmt      = getTotalAssignments(file);
 
     // Total points possible in each category
-    double labTotal     = getPoints(file, labAmt);
-    double quizTotal    = dropLowestQuiz(file, quizAmt);
+    double labTotal     = dropLowestScore(file, labAmt);
+    double quizTotal    = dropLowestScore(file, quizAmt);
     double examTotal    = getPoints(file, examAmt);
     double projectTotal = getPoints(file, projectAmt);
     double finalTotal   = getPoints(file, finalAmt);
@@ -155,50 +161,104 @@ void generateGradeReport(fstream& file){
 
 /*
  * @author: Emily Hsu
+ * @param: weighted project grade as decimal
+ * @param: weighted lab grade as decimal
+ * @param: weighted quiz grade as decimal
+ * @param: weighted exam grade as decimal
+ * @param: weighted final grade as decimal
+ * @param: total grade earned as decimal
+ * @param: final letter grade 
 */
 void printResults(double projectGrade, double labGrade, double quizGrade, double examGrade, double finalGrade, double totalGrade, char letterGrade){
     cout << "Project: " << fixed << setprecision(2) << projectGrade << "%\n" 
-    << "Lab: " << labGrade << "%\n"
-    << "Quiz: " << quizGrade << "%\n"
-    << "Exams: " << examGrade << "%\n"
-    << "Final Exam: " << finalGrade << "%\n"
-    << "Total: " << totalGrade << "%\n"
+    << "Lab: " << labGrade*TO_PERCENT << "%\n"
+    << "Quiz: " << quizGrade*TO_PERCENT << "%\n"
+    << "Exams: " << examGrade*TO_PERCENT << "%\n"
+    << "Final Exam: " << finalGrade*TO_PERCENT << "%\n"
+    << "Total: " << totalGrade*TO_PERCENT << "%\n"
     << "Final Letter Grade: " << letterGrade << endl;
 }
 
 /*
  * @author: Emily Hsu
+ * @param: User's new password
 */
-void printMenu(int userSelect){
-    fstream userFile;
-    string fileName;
+void userLogin(string newPassword){
+    int i=0, access = 0, userSelect;
+    string username, password;
 
-    while (userSelect != 4){
-        cout << "Select an option:\n1. Generate fake data\n2. Which score file to use\n3. Show student score report\n4. Exit program\n" << userSelect << endl;
-        cin >> userSelect;
-        if (userSelect == 1){
-            userFile.open(fileName);
-            while(userFile.fail()){
-                cout << "Enter a valid file name." << endl;
-            } generateGradeReport(userFile);
-        } else if (userSelect == 2){
-            cout << "Choose a score file: " << fileName << endl;
-            cin >> fileName;
-            cout << "Successfully uploaded score file " << fileName << endl;
-        } else if (userSelect == 3){
-            userFile.open(fileName);
-            while(userFile.fail()){
-                cout << "Enter a valid file name or select option 2 and choose a score file." << endl;
-            } generateGradeReport(userFile);
-        } else if (userSelect == 4){
-            exit();
-        }
+    const string password1 = "abc", password2 = "123";
+
+    cout << "Enter your username: " << endl;
+    cin >> username;
+    cout << "Enter your password: " << endl;
+    cin >> password;
+
+    if ((password == password1)|(password == password2)|(password == newPassword)){
+        access = 1;
     }
+    while(access != 1){
+        cout << "Password is wrong, try again." << endl;
+        cin >> password;
+        if ((password == password1)|(password == password2)|(password == newPassword)){
+            break;
+        }
+        i++;
+        if (i==2){
+            cout << "You failed to input the correct password." << endl;
+            userSelect = 5;
+            break;
+        }
+    } 
 }
 
 /*
  * @author: Emily Hsu
+ * @param: user's integer selection of function in menu 
 */
-void exit(void){
-    cout << "Exiting program..." << endl;
+void printMenu(int userSelect){
+    fstream userFile;
+    string fileName, newPassword = "";
+    userLogin(newPassword);
+
+    while (userSelect != 6){
+        cout << "Select an option:\n1. Generate fake data\n2. Which score file to use\n3. Show student score report\n4. Change password\n5. Log out\n6. Exit program" << endl;
+        cin >> userSelect;
+        switch (userSelect){
+        case 1:
+            cout << "Enter a name for your file ending with '.txt': " << endl;
+            cin >> fileName;
+            generateReport(fileName);
+            break;
+        case 2:
+            cout << "Choose a score file: " << endl;
+            cin >> fileName;
+            cout << "Successfully uploaded score file " << fileName << "!" << endl;
+            break;
+        case 3:
+            cout << "Choose a file for your score report: " << endl;
+            cin >> fileName;
+            userFile.open(fileName);
+            while (userFile.fail()){
+                cout << "Error occurred. Please try again." << endl;
+                cin >> fileName;
+                userFile.open(fileName);
+            } 
+            generateGradeReport(userFile);
+            break;
+        case 4:
+            cout << "Enter your new password: " << endl;
+            cin >> newPassword;
+            cout << "Password changed!" << endl;
+            break;
+        case 5:
+            cout << "Logging out..." << endl;
+            userLogin(newPassword);
+            break;
+        default: 
+            cout << "Error occurred. Please try again." << endl;
+            break;
+        }
+    } cout << "Exiting program..." << endl;
 }
+

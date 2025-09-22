@@ -7,9 +7,9 @@
 using namespace std;
 
 // make function to randomize this, i think
-const int QUIZ_AMOUNT = 7;
-const int LAB_AMOUNT = 20;
-const int MIDTERM_AMOUNT = 2;
+const int MAX_QUIZZES = 7;
+const int MAX_LABS = 20;
+const int MAX_MIDTERMS = 3;
 const int PROJECT_AMOUNT = 1;
 const int FINAL_EXAM_AMOUNT = 1;
 const int MAX_QUIZ_SCORE = 10;
@@ -25,10 +25,15 @@ void generateScores(void);
 
 /*
  * @author: Emily Hsu
+ * @param: file to write to
+ * @param: maximum number of assignments possible
+ * Generates the number of assignments for each category
 */
-void generateAssignmentAmount(void){
-
+int generateAssignmentAmount(int maxAssignments){
+    int min = 1, numAssignments = 0;
+    return numAssignments = min + rand() % (maxAssignments - min);
 }
+
 
 /*
  * @author: Natasha Kho
@@ -60,20 +65,22 @@ void generateScores(ofstream& out, int amount, int maxPossibleScore){
 
 /*
  * @author: Natasha Kho
+ * @author: Emily Hsu
  * Outputs a file with random:
  * assignment amount, points possible per assignment, points actually earned per assignment
 */
-void generateScores(void){
+void generateReport(string fileName){
+    int LAB_AMOUNT, QUIZ_AMOUNT, MIDTERM_AMOUNT;
+
     ofstream out;
-    out.open("randomlyGenerated.txt");
+    out.open(fileName);
     srand(time(0)); // Ensures that each randomly generated attempt is different
 
-    // Generates amount of each assignment in each category
-    out << LAB_AMOUNT << " " 
-        << QUIZ_AMOUNT << " " 
-        << MIDTERM_AMOUNT << " " 
-        << PROJECT_AMOUNT << " " 
-        << FINAL_EXAM_AMOUNT << endl;
+    // Generate number of assignments in each category
+    LAB_AMOUNT = generateAssignmentAmount(MAX_LABS);
+    QUIZ_AMOUNT = generateAssignmentAmount(MAX_QUIZZES);
+    MIDTERM_AMOUNT = generateAssignmentAmount(MAX_MIDTERMS);
+    out << LAB_AMOUNT << " " << QUIZ_AMOUNT << " " << MIDTERM_AMOUNT << " " << PROJECT_AMOUNT << " " << FINAL_EXAM_AMOUNT << endl;
 
     // Generate max scores
     generateMaxScores(out, MAX_LAB_SCORE, LAB_AMOUNT);
@@ -91,5 +98,5 @@ void generateScores(void){
     generateScores(out, FINAL_EXAM_AMOUNT, MAX_FINAL_EXAM_SCORE); // Final
 
     out.close();
-    cout << "File generated!" << endl;
+    cout << fileName << " generated!" << endl;
 }
