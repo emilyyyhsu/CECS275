@@ -11,7 +11,12 @@
 #include <fstream>
 #include <string>
 #include <cmath>
-#include "grades.h"
+#include "randGen.h"
+
+// Function prototypes
+void printMenu(int userSelect);
+void generateReport(string fileName);
+void printResults(double projectGrade, double labGrade, double quizGrade, double examGrade, double finalGrade, double totalGrade, char letterGrade);
 
 using namespace std;
 
@@ -27,20 +32,6 @@ const double GradeA = 0.90,
              GradeB = 0.80,
              GradeC = 0.70,
              GradeD = 0.60;
-
-// Function prototypes
-void printMenu(int userSelect);
-void generateReport(string fileName);
-void printResults(double projectGrade, double labGrade, double quizGrade, double examGrade, double finalGrade, double totalGrade, char letterGrade);
-
-int main (void){
-    fstream inFile;
-    int userSelect;
-    string fileName;
-    inFile.open("text.txt");
-    printMenu(userSelect);
-    generateReport(fileName);
-}
 
 /*
  * @author: Natasha Kho
@@ -64,19 +55,16 @@ double dropLowestScore(fstream& file, int iterationAmount){
     int score1 = 0, score2 = 0, maxScore, minScore, total = 0;
 
     file >> score1 >> score2;
-    cout << "SCORE1: " << score1 << " SCORE2: " << score2 << endl;  
-    
+
     if (iterationAmount%2 == 0){
         for (int i = 0; i < iterationAmount-2; i++){
             minScore = min(score1, score2);
             maxScore = max(score1, score2);
             total += maxScore;
             score1 = minScore;
-            file >> score2;
-            
-            cout <<  "MAX: " << maxScore << " MIN: " << minScore << " TOTAL: " << total << endl;
-            cout << "SCORE1: " << score1 << " SCORE2: " << score2 << endl;  
+            file >> score2;      
         }
+        
     }else if(iterationAmount%2 != 0){
         for (int i = 0; i < iterationAmount-1; i++){
             minScore = min(score1, score2);
@@ -86,8 +74,6 @@ double dropLowestScore(fstream& file, int iterationAmount){
             if(i<iterationAmount-2){
                 file >> score2;
             }
-            cout <<  "MAX: " << maxScore << " MIN: " << minScore << " TOTAL: " << total << endl;
-            cout << "SCORE1: " << score1 << " SCORE2: " << score2 << endl;  
         }
     }
     return total;
