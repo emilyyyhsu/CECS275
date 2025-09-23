@@ -202,7 +202,7 @@ int userLogin(string newPassword){
     string username, password;
 
     const string password1 = "abc", password2 = "123";
-
+    cout << "---------------------------------------------------------" << endl;
     cout << "Enter your username: " << endl;
     cin >> username;
     cout << "Enter your password: " << endl;
@@ -212,14 +212,19 @@ int userLogin(string newPassword){
         access = 1;
     }
     while(access != 1){
-        cout << "Password is wrong, try again." << endl;
+        cout << "---------------------------------------------------------\n" 
+             << "Password is wrong, try again." << endl;
         cin >> password;
         if ((password == password1)|(password == password2)|(password == newPassword)){
+            access = 1;
             break;
         }
         i++;
         if (i==2){
-            cout << "You failed to input the correct password." << endl;
+            cout << "=========================================================\n" 
+                 << "You failed to input the correct password." 
+                 << "\n=========================================================\n" 
+                 << endl;
             break;
         }
     } 
