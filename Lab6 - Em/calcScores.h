@@ -49,38 +49,32 @@ int getTotalAssignments(fstream& file){
 
 /*
  * @author: Emily Hsu
+ * @author: Natasha Kho
  * @param: filestream file variable
  * @param: amount of assignments to iterate through
  * @return total score of one category of assignment with the lowest grade dropped
 */
 double dropLowestScore(fstream& file, int iterationAmount){
-    int score1 = 0, score2 = 0, maxScore, minScore, total = 0;
+    int currScore, 
+        prevScore, 
+        lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
+    double total = 0; // want to return a double for data-type math reasons later
 
-    if(iterationAmount == 1){
-        file >> score1; 
-        total += score1;
-    }else{
-        file >> score1 >> score2; 
-        if (iterationAmount%2 == 0){
-            for (int i = 0; i < iterationAmount-2; i++){
-                minScore = min(score1, score2);
-                maxScore = max(score1, score2);
-                total += maxScore;
-                score1 = minScore;
-                file >> score2;
-            }
-        }else if(iterationAmount%2 != 0){
-            for (int i = 0; i < iterationAmount-1; i++){
-                minScore = min(score1, score2);
-                maxScore = max(score1, score2);
-                total += maxScore;
-                score1 = minScore;
-                if(i<iterationAmount-2){
-                    file >> score2;
-                }
-            }
+    for(int i = 0; i < iterationAmount; i++){
+        file >> currScore; // Gets score
+
+        if(currScore <= lowestScore){ // if the previous score is lower than the current score
+            lowestScore = prevScore; // then, we put the previous score as the lowest score
+            // cout << "LOWEST SCORE " << i << " " << lowestScore << endl;
         }
+
+        // We reset the previous score to the current score as we'll be incrementing by 1 and thus changing currScore
+        prevScore = currScore;        
+
+        // We add the current score to the total, regardless of how low it is
+        total += currScore;
     }
+    total -= lowestScore;
     return total;
 }
 
@@ -136,33 +130,42 @@ double calculatePercentage(double grade, double total, double gradeWeight){
 */
 void generateGradeReport(fstream& file){
     // Amount of assignments in each category
-    int labAmt        = getTotalAssignments(file);
-    int quizAmt       = getTotalAssignments(file);
+    int labAmt        = getTotalAssignments(file);  // this is right
+    int quizAmt       = getTotalAssignments(file);  // this is right
     int examAmt       = getTotalAssignments(file);
     int projectAmt    = getTotalAssignments(file);
     int finalAmt      = getTotalAssignments(file);
 
+    // cout << "LAB TOTAL  (Amount of assignments):  " << labAmt << endl
+    //      << "QUIZ TOTAL (Amount of assignments): " << quizAmt << endl;
+
     // Total points possible in each category
-    double labTotal     = getPoints(file, labAmt);
-    double quizTotal    = getPoints(file, quizAmt);
+    double labTotal     = dropLowestScore(file, labAmt);    // this is right
+    double quizTotal    = dropLowestScore(file, quizAmt);   // this is right
     double examTotal    = getPoints(file, examAmt);
     double projectTotal = getPoints(file, projectAmt);
     double finalTotal   = getPoints(file, finalAmt);
 
+    // cout << "LAB TOTAL  (Total points possible):  " << labTotal << endl
+    //      << "QUIZ TOTAL (Total points possible): " << quizTotal << endl;
+
     // Points earned in each category
-    double labGrade     = dropLowestScore(file, labAmt);
-    double quizGrade    = dropLowestScore(file, quizAmt);
+    double labGrade     = dropLowestScore(file, labAmt); // should be 43 (lowest 1), (total 44)
+    double quizGrade    = dropLowestScore(file, quizAmt); // should be 42 (lowest 0), (total 42)
     double examGrade    = getPoints(file, examAmt);
     double projectGrade = getPoints(file, projectAmt);
     double finalGrade   = getPoints(file, finalAmt);
 
-    labGrade = calculatePercentage(labGrade, labTotal-1, FIFTEEN_PERCENT);
-    quizGrade = calculatePercentage(quizGrade, quizTotal-1, FIFTEEN_PERCENT);
-    examGrade = calculatePercentage(examGrade, examTotal, FORTY_PERCENT);
-    projectGrade = calculatePercentage(projectGrade, projectTotal, TEN_PERCENT);
-    finalGrade = calculatePercentage(finalGrade, finalTotal, TWENTY_PERCENT);
-    double totalGrade = labGrade + quizGrade + examGrade
-                + projectGrade + finalGrade;
+    // cout << "LAB TOTAL  (Points earned):  " << labGrade  << endl
+    //      << "QUIZ TOTAL (Points earned):  " << quizGrade << endl;
+
+    labGrade            = calculatePercentage(labGrade, labTotal, FIFTEEN_PERCENT);
+    quizGrade           = calculatePercentage(quizGrade, quizTotal, FIFTEEN_PERCENT);
+    examGrade           = calculatePercentage(examGrade, examTotal, FORTY_PERCENT);
+    projectGrade        = calculatePercentage(projectGrade, projectTotal, TEN_PERCENT);
+    finalGrade          = calculatePercentage(finalGrade, finalTotal, TWENTY_PERCENT);
+    double totalGrade   = labGrade + quizGrade + examGrade
+                                   + projectGrade + finalGrade;
     
     char letterGrade = getLetterGrade(totalGrade);
 
@@ -232,77 +235,57 @@ int userLogin(string newPassword){
 }
 
 /*
- * @author: Emily Hsu
- * @param: user's integer selection of function in menu 
+ * @author: Natasha Kho
 */
-void printMenu(int userSelect){
-    fstream userFile;
-    int access, uploaded = 0;
-    string fileName, newPassword = "";
-
-    access = userLogin(newPassword);
-    if (access == 0){
-        userSelect = 6;
-    }
-
-    while (userSelect != 6){
-        cout << "=========================================================\n" 
+int printMenu(void){
+    int userSelect = 0;
+    cout << "=========================================================\n" 
              << "Select an option:\n1. Generate fake data\n2. Which score file to use\n3. Show student score report\n4. Change password\n5. Log out\n6. Exit program\n" 
              << "=========================================================" << endl;
         cin >> userSelect;
-        switch (userSelect){
-        case 1:
-            cout << "---------------------------------------------------------\n"  
-                 << "Enter a name for your file ending with '.txt': " 
-                << endl;
-            cin >> fileName;
-            generateReport(fileName);
-            cout << fileName << " generated!\n---------------------------------------------------------" << endl;
-            break;
-        case 2:
-            cout << "---------------------------------------------------------\n"
-                 << "Choose a score file: " << endl;
-            cin >> fileName;
-            cout << "Successfully uploaded score file " << fileName 
-            << "!\n---------------------------------------------------------"<< endl;
-            uploaded = 1;
-            break;
-        case 3:
-            if (uploaded == 0){
-                cout << "---------------------------------------------------------\n" 
-                     << "Choose a file for your score report: " 
-                    << endl;
-                cin >> fileName;
-                cout << "---------------------------------------------------------" << endl;
-            } 
-            userFile.open(fileName);
-            while (userFile.fail()){
-                cout << "Re-enter your file name." << endl;
-                cin >> fileName;
-                userFile.open(fileName);
-                cout << "---------------------------------------------------------" << endl;
-            }
-            generateGradeReport(userFile);
-            uploaded = 0;
-            userFile.close();
-            break;
-        case 4:
-            cout << "---------------------------------------------------------\n"  
-                 << "Enter your new password: " << endl;
-            cin  >> newPassword;
-            cout << "Password changed!"
-                 << "---------------------------------------------------------\n" << endl;
-            break;
-        case 5:
-            cout << "Logging out...\n---------------------------------------------------------" << endl;
-            userLogin(newPassword);
-            break;
-        case 6: 
-            break;
-        default: 
-            cout << "Error occurred. Please try again." << endl;
-            break;
-        }
-    } cout << "Exiting program..." << endl;
+    return userSelect;
 }
 
+/*
+ * @author: Natasha Kho
+*/
+string uploadFile(){
+    string fileName;
+    cout << "---------------------------------------------------------\n"
+         << "Choose a score file: " << endl;
+    cin  >> fileName;
+    cout << "Successfully uploaded score file " << fileName 
+         << "!\n---------------------------------------------------------"<< endl;
+    return fileName;
+}
+
+/*
+ * @author: Natasha Kho
+*/
+int checkFile(fstream& fileInput){
+    string fileName;
+    fstream in;
+    do { 
+        cout << "---------------------------------------------------------\n" 
+             << "Choose a valid file for your score report: " 
+             << endl;
+        cin  >> fileName;
+        cout << "---------------------------------------------------------" << endl;
+    }
+    while(in.fail());
+    fileInput.open(fileName);
+    return 1;
+}
+
+/*
+ * @author: Natasha Kho
+*/
+string setNewPassword(void){
+    string newPassword;
+    cout << "---------------------------------------------------------\n"  
+         << "Enter your new password: " << endl;
+    cin  >> newPassword;
+    cout << "Password changed!"
+         << "\n---------------------------------------------------------\n" << endl;
+    return newPassword;
+}
