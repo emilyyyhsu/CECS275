@@ -69,13 +69,18 @@ void generateScores(ofstream& out, int amount, int maxPossibleScore){
  * Outputs a file with random:
  * assignment amount, points possible per assignment, points actually earned per assignment
 */
-void generateReport(string fileName){
+void generateReport(){
     int LAB_AMOUNT, QUIZ_AMOUNT, MIDTERM_AMOUNT;
+    string fileName;
+    cout << "---------------------------------------------------------\n"  
+         << "Enter a name for your file ending with '.txt': " 
+         << endl;
+    cin >> fileName;
 
     ofstream out;
     out.open(fileName);
     srand(time(0)); // Ensures that each randomly generated attempt is different
-
+    
     // Generate number of assignments in each category
     LAB_AMOUNT = generateAssignmentAmount(MAX_LABS);
     QUIZ_AMOUNT = generateAssignmentAmount(MAX_QUIZZES);
@@ -98,4 +103,6 @@ void generateReport(string fileName){
     generateScores(out, FINAL_EXAM_AMOUNT, MAX_FINAL_EXAM_SCORE); // Final
     
     out.close();
+    cout << fileName << " generated!\n---------------------------------------------------------" << endl;
+
 }

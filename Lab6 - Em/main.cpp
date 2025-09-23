@@ -21,9 +21,45 @@
 
 int main (void){
     fstream inFile;
-    int userSelect;
     string fileName;
-    inFile.open("text.txt");
-    printMenu(userSelect);
-    generateReport(fileName);
+    string newPassword;
+    int userSelect;
+
+    // Prompt initial login
+    userLogin(newPassword);
+
+    do{
+        // Prints menu and gets user's input
+        userSelect = printMenu();
+
+        // Beautiful asf switch case
+        switch (userSelect){
+        case 1:
+            generateReport();
+            break;
+        case 2:
+            fileName = uploadFile();
+            inFile.open(fileName);
+            break;
+        case 3:
+            if(checkFile(inFile)){
+                generateGradeReport(inFile);
+            }
+            break;
+        case 4: // Change password
+            newPassword = setNewPassword();
+            break;
+        case 5:
+            cout << "Logging out...\n---------------------------------------------------------" << endl;
+            userLogin(newPassword);
+            break;
+        case 6: 
+            continue;
+        default: 
+            cout << "Error occurred. Please try again." << endl;
+            break;
+        }
+    }
+    while(userSelect != 6);
+    cout << "Bye bye!" << endl;
 }
