@@ -1,3 +1,4 @@
+
 /*
  * This program calculates your grades
  * @author: Natasha Kho
@@ -20,10 +21,10 @@
 
 
 int main (void){
-    fstream inFile;
+    fstream inFile, userFile;
     string fileName;
     string newPassword;
-    int userSelect;
+    int userSelect, upload = 0;
 
     // Prompt initial login
     userLogin(newPassword);
@@ -32,27 +33,35 @@ int main (void){
         // Prints menu and gets user's input
         userSelect = printMenu();
 
-        // Beautiful asf switch case
         switch (userSelect){
-        case 1:
+        // Generate fake data
+        case 1: 
             generateReport();
             break;
+        // Choose which score file to use
         case 2:
-            fileName = uploadFile();
-            inFile.open(fileName);
+            uploadFile(userFile);
+            upload = 1;
             break;
+        // Show student grade report
         case 3:
-            if(checkFile(inFile)){
-                generateGradeReport(inFile);
-            }
+            if (!upload){
+                checkFile(userFile);
+            } 
+            generateGradeReport(userFile);
+            upload = 0;
+            userFile.close();
             break;
-        case 4: // Change password
+        // Change password
+        case 4: 
             newPassword = setNewPassword();
             break;
+        // Log out 
         case 5:
             cout << "Logging out...\n---------------------------------------------------------" << endl;
             userLogin(newPassword);
             break;
+        // Exit program
         case 6: 
             continue;
         default: 

@@ -68,7 +68,8 @@ double dropLowestScore(fstream& file, int iterationAmount){
             // cout << "LOWEST SCORE " << i << " " << lowestScore << endl;
         }
 
-        // We reset the previous score to the current score as we'll be incrementing by 1 and thus changing currScore
+        // We reset the previous score to the current score as we'll be incrementing by 1 
+        // and thus changing currScore
         prevScore = currScore;        
 
         // We add the current score to the total, regardless of how low it is
@@ -129,35 +130,27 @@ double calculatePercentage(double grade, double total, double gradeWeight){
  * @param: score file
 */
 void generateGradeReport(fstream& file){
+
     // Amount of assignments in each category
-    int labAmt        = getTotalAssignments(file);  // this is right
-    int quizAmt       = getTotalAssignments(file);  // this is right
+    int labAmt        = getTotalAssignments(file);  
+    int quizAmt       = getTotalAssignments(file);  
     int examAmt       = getTotalAssignments(file);
     int projectAmt    = getTotalAssignments(file);
     int finalAmt      = getTotalAssignments(file);
 
-    // cout << "LAB TOTAL  (Amount of assignments):  " << labAmt << endl
-    //      << "QUIZ TOTAL (Amount of assignments): " << quizAmt << endl;
-
     // Total points possible in each category
-    double labTotal     = dropLowestScore(file, labAmt);    // this is right
-    double quizTotal    = dropLowestScore(file, quizAmt);   // this is right
+    double labTotal     = dropLowestScore(file, labAmt);    
+    double quizTotal    = dropLowestScore(file, quizAmt);   
     double examTotal    = getPoints(file, examAmt);
     double projectTotal = getPoints(file, projectAmt);
     double finalTotal   = getPoints(file, finalAmt);
 
-    // cout << "LAB TOTAL  (Total points possible):  " << labTotal << endl
-    //      << "QUIZ TOTAL (Total points possible): " << quizTotal << endl;
-
     // Points earned in each category
-    double labGrade     = dropLowestScore(file, labAmt); // should be 43 (lowest 1), (total 44)
-    double quizGrade    = dropLowestScore(file, quizAmt); // should be 42 (lowest 0), (total 42)
+    double labGrade     = dropLowestScore(file, labAmt); 
+    double quizGrade    = dropLowestScore(file, quizAmt); 
     double examGrade    = getPoints(file, examAmt);
     double projectGrade = getPoints(file, projectAmt);
     double finalGrade   = getPoints(file, finalAmt);
-
-    // cout << "LAB TOTAL  (Points earned):  " << labGrade  << endl
-    //      << "QUIZ TOTAL (Points earned):  " << quizGrade << endl;
 
     labGrade            = calculatePercentage(labGrade, labTotal, FIFTEEN_PERCENT);
     quizGrade           = calculatePercentage(quizGrade, quizTotal, FIFTEEN_PERCENT);
@@ -236,49 +229,72 @@ int userLogin(string newPassword){
 
 /*
  * @author: Natasha Kho
+ * @author: Emily Hsu
 */
 int printMenu(void){
     int userSelect = 0;
     cout << "=========================================================\n" 
              << "Select an option:\n1. Generate fake data\n2. Which score file to use\n3. Show student score report\n4. Change password\n5. Log out\n6. Exit program\n" 
              << "=========================================================" << endl;
-        cin >> userSelect;
+    cin >> userSelect;
     return userSelect;
 }
 
 /*
  * @author: Natasha Kho
+ * @author: Emily Hsu
 */
-string uploadFile(){
+// int uploadFile(){
+//     fstream openFile;
+//     string fileName;
+//     cout << "---------------------------------------------------------\n"
+//          << "Choose a score file: " << endl;
+//     cin  >> fileName;
+//     cout << "Successfully uploaded score file " << fileName 
+//          << "!\n---------------------------------------------------------"<< endl;
+    
+//     openFile.open(fileName);
+//     return 1;
+// }
+
+void uploadFile(fstream userFile){
+    fstream userFile;
     string fileName;
     cout << "---------------------------------------------------------\n"
-         << "Choose a score file: " << endl;
-    cin  >> fileName;
+        << "Choose a score file: " << endl;
+    cin >> fileName;
     cout << "Successfully uploaded score file " << fileName 
-         << "!\n---------------------------------------------------------"<< endl;
-    return fileName;
+        << "!\n---------------------------------------------------------"<< endl;
+    userFile.open(fileName);
 }
+
 
 /*
  * @author: Natasha Kho
+ * @author: Emily Hsu
 */
-int checkFile(fstream& fileInput){
+void checkFile(fstream userFile){
+    fstream userFile;
     string fileName;
-    fstream in;
-    do { 
-        cout << "---------------------------------------------------------\n" 
-             << "Choose a valid file for your score report: " 
-             << endl;
-        cin  >> fileName;
+    cout << "---------------------------------------------------------\n" 
+        << "Choose a file for your score report: " 
+        << endl;
+    cin >> fileName;
+    cout << "---------------------------------------------------------" << endl; 
+    userFile.open(fileName);
+    while (userFile.fail()){
+        cout << "Re-enter your file name." << endl;
+        cin >> fileName;
+        userFile.open(fileName);
         cout << "---------------------------------------------------------" << endl;
     }
-    while(in.fail());
-    fileInput.open(fileName);
-    return 1;
 }
+
+
 
 /*
  * @author: Natasha Kho
+ * @author: Emily Hsu
 */
 string setNewPassword(void){
     string newPassword;
