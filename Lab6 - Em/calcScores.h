@@ -244,28 +244,15 @@ int printMenu(void){
  * @author: Natasha Kho
  * @author: Emily Hsu
 */
-// int uploadFile(){
-//     fstream openFile;
-//     string fileName;
-//     cout << "---------------------------------------------------------\n"
-//          << "Choose a score file: " << endl;
-//     cin  >> fileName;
-//     cout << "Successfully uploaded score file " << fileName 
-//          << "!\n---------------------------------------------------------"<< endl;
-    
-//     openFile.open(fileName);
-//     return 1;
-// }
 
-void uploadFile(fstream userFile){
-    fstream userFile;
+string uploadFile(){
     string fileName;
     cout << "---------------------------------------------------------\n"
         << "Choose a score file: " << endl;
     cin >> fileName;
     cout << "Successfully uploaded score file " << fileName 
         << "!\n---------------------------------------------------------"<< endl;
-    userFile.open(fileName);
+    return fileName;
 }
 
 
@@ -273,21 +260,20 @@ void uploadFile(fstream userFile){
  * @author: Natasha Kho
  * @author: Emily Hsu
 */
-void checkFile(fstream userFile){
-    fstream userFile;
+string checkFile(){
     string fileName;
     cout << "---------------------------------------------------------\n" 
         << "Choose a file for your score report: " 
         << endl;
     cin >> fileName;
     cout << "---------------------------------------------------------" << endl; 
-    userFile.open(fileName);
-    while (userFile.fail()){
-        cout << "Re-enter your file name." << endl;
-        cin >> fileName;
-        userFile.open(fileName);
-        cout << "---------------------------------------------------------" << endl;
-    }
+    return fileName;
+    // while (userFile.fail()){
+    //     cout << "Re-enter your file name." << endl;
+    //     cin >> fileName;
+    //     userFile.open(fileName);
+    //     cout << "---------------------------------------------------------" << endl;
+    // }
 }
 
 

@@ -40,13 +40,15 @@ int main (void){
             break;
         // Choose which score file to use
         case 2:
-            uploadFile(userFile);
+            fileName = uploadFile();
+            userFile.open(fileName);
             upload = 1;
             break;
         // Show student grade report
         case 3:
             if (!upload){
-                checkFile(userFile);
+                fileName = checkFile();
+                userFile.open(fileName);
             } 
             generateGradeReport(userFile);
             upload = 0;
