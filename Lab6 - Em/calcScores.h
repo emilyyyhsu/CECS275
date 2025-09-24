@@ -56,7 +56,6 @@ int getTotalAssignments(fstream& file){
 */
 double dropLowestScore(fstream& file, int iterationAmount){
     int currScore, 
-        prevScore, 
         lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
     double total = 0; // want to return a double for data-type math reasons later
 
@@ -64,14 +63,9 @@ double dropLowestScore(fstream& file, int iterationAmount){
         file >> currScore; // Gets score
 
         if(currScore <= lowestScore){ // if the previous score is lower than the current score
-            lowestScore = prevScore; // then, we put the previous score as the lowest score
+            lowestScore = currScore; // then, we put the previous score as the lowest score
             // cout << "LOWEST SCORE " << i << " " << lowestScore << endl;
         }
-
-        // We reset the previous score to the current score as we'll be incrementing by 1 
-        // and thus changing currScore
-        prevScore = currScore;        
-
         // We add the current score to the total, regardless of how low it is
         total += currScore;
     }
@@ -244,7 +238,6 @@ int printMenu(void){
  * @author: Natasha Kho
  * @author: Emily Hsu
 */
-
 string uploadFile(){
     string fileName;
     cout << "---------------------------------------------------------\n"
@@ -268,12 +261,6 @@ string checkFile(){
     cin >> fileName;
     cout << "---------------------------------------------------------" << endl; 
     return fileName;
-    // while (userFile.fail()){
-    //     cout << "Re-enter your file name." << endl;
-    //     cin >> fileName;
-    //     userFile.open(fileName);
-    //     cout << "---------------------------------------------------------" << endl;
-    // }
 }
 
 

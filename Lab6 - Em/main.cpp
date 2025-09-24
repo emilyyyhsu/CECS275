@@ -18,8 +18,6 @@
  * to change the password and a function to upload a score file that can be used to generate a grade report.
 */
 
-
-
 int main (void){
     fstream inFile, userFile;
     string fileName;
@@ -27,50 +25,50 @@ int main (void){
     int userSelect, upload = 0;
 
     // Prompt initial login
-    userLogin(newPassword);
+    if(userLogin(newPassword)){
+        do{
+            // Prints menu and gets user's input
+            userSelect = printMenu();
 
-    do{
-        // Prints menu and gets user's input
-        userSelect = printMenu();
-
-        switch (userSelect){
-        // Generate fake data
-        case 1: 
-            generateReport();
-            break;
-        // Choose which score file to use
-        case 2:
-            fileName = uploadFile();
-            userFile.open(fileName);
-            upload = 1;
-            break;
-        // Show student grade report
-        case 3:
-            if (!upload){
-                fileName = checkFile();
+            switch (userSelect){
+            // Generate fake data
+            case 1: 
+                generateReport();
+                break;
+            // Choose which score file to use
+            case 2:
+                fileName = uploadFile();
                 userFile.open(fileName);
-            } 
-            generateGradeReport(userFile);
-            upload = 0;
-            userFile.close();
-            break;
-        // Change password
-        case 4: 
-            newPassword = setNewPassword();
-            break;
-        // Log out 
-        case 5:
-            cout << "Logging out...\n---------------------------------------------------------" << endl;
-            userLogin(newPassword);
-            break;
-        // Exit program
-        case 6: 
-            continue;
-        default: 
-            cout << "Error occurred. Please try again." << endl;
-            break;
+                upload = 1;
+                break;
+            // Show student grade report
+            case 3:
+                if (!upload){
+                    fileName = checkFile();
+                    userFile.open(fileName);
+                } 
+                generateGradeReport(userFile);
+                upload = 0;
+                userFile.close();
+                break;
+            // Change password
+            case 4: 
+                newPassword = setNewPassword();
+                break;
+            // Log out 
+            case 5:
+                cout << "Logging out...\n---------------------------------------------------------" << endl;
+                userLogin(newPassword);
+                break;
+            // Exit program
+            case 6: 
+                continue;
+            default: 
+                cout << "Error occurred. Please try again." << endl;
+                break;
+            }
         }
+        while(userSelect != 6);
+        cout << "Bye bye!" << endl;
     }
-    while(userSelect != 6);
-    cout << "Bye bye!" << endl;
 }
