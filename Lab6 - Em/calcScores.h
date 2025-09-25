@@ -278,3 +278,7 @@ string setNewPassword(void){
          << "\n---------------------------------------------------------\n" << endl;
     return newPassword;
 }
+
+/*
+ * @author: Emily Hsu
+*/

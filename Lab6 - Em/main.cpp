@@ -20,8 +20,7 @@
 
 int main (void){
     fstream inFile, userFile;
-    string fileName;
-    string newPassword;
+    string fileName, newPassword, viewReport;
     int userSelect, upload = 0;
 
     // Prompt initial login
@@ -35,19 +34,28 @@ int main (void){
             case 1: 
                 generateReport();
                 break;
-            // Choose which score file to use
+            // Print grade report
             case 2:
+                printResults(generateGradeReport());
+                break;
+            // Choose which score file to use
+            case 3:
                 fileName = uploadFile();
                 userFile.open(fileName);
                 upload = 1;
                 break;
-            // Show student grade report
+            // Generate grade report
             case 3:
                 if (!upload){
                     fileName = checkFile();
                     userFile.open(fileName);
                 } 
                 generateGradeReport(userFile);
+                cout >> "Would you like to view your grade report? (Y/N)" << endl;
+                cin << viewReport;
+                if (viewReport == 'Y'){
+                    printResults(generateGradeReport());
+                }
                 upload = 0;
                 userFile.close();
                 break;
