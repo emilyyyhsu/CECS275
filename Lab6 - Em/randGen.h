@@ -61,7 +61,6 @@ void generateScores(ofstream& out, int amount, int maxPossibleScore){
     for(int i = 0; i < amount; i++){
         out << min + rand() % (max - min + 1) << " ";
     }
-    
 }
 
 /*

@@ -94,17 +94,17 @@ double getPoints(fstream& file, int iterationAmount){
  * @param: total grade after calculations
  * @return letter grade based on score
 */
-char getLetterGrade(double totalGrade){
+std::string getLetterGrade(double totalGrade){
     if (totalGrade >= GradeA) {
-        return 'A';
+        return "A";
     } else if (totalGrade >= GradeB){
-        return 'B';
+        return "B";
     } else if (totalGrade >= GradeC){
-        return 'C';
+        return "C";
     } else if (totalGrade >= GradeD){
-        return 'D';
+        return "D";
     } else {
-        return 'F';
+        return "F";
     }
 }
 
@@ -123,8 +123,8 @@ double calculatePercentage(double grade, double total, double gradeWeight){
  * @author: Emily Hsu
  * @param: score file
 */
-void generateGradeReport(fstream& file){
-
+std::string generateGradeReport(fstream& file){
+    std::string garbage;
     // Amount of assignments in each category
     int labAmt        = getTotalAssignments(file);  
     int quizAmt       = getTotalAssignments(file);  
@@ -154,15 +154,18 @@ void generateGradeReport(fstream& file){
     double totalGrade   = labGrade + quizGrade + examGrade
                                    + projectGrade + finalGrade;
     
-    char letterGrade = getLetterGrade(totalGrade);
+    string letterGrade = getLetterGrade(totalGrade);
 
-
-    printResults(projectGrade, labGrade, quizGrade, examGrade, finalGrade, totalGrade, letterGrade);
+    // has to be split
+    return garbage = std::to_string(projectGrade) + "<" + std::to_string(labGrade) + "<" 
+            + std::to_string(quizGrade) + "<" + std::to_string(examGrade) +  "<"  
+            + std::to_string(finalGrade) + "<" + std::to_string(totalGrade) + "<" + (letterGrade);
 }
 
 /*
  * @author: Emily Hsu
  * @author Natasha Kho (Formatting)
+ * couts the report
  * @param: weighted project grade as decimal
  * @param: weighted lab grade as decimal
  * @param: weighted quiz grade as decimal
@@ -171,7 +174,43 @@ void generateGradeReport(fstream& file){
  * @param: total grade earned as decimal
  * @param: final letter grade 
 */
-void printResults(double projectGrade, double labGrade, double quizGrade, double examGrade, double finalGrade, double totalGrade, char letterGrade){
+void printResults(std::string inputString){
+    string inputStringCopy = inputString;
+    string delimiter = "<";
+    int position = inputStringCopy.find(delimiter);
+    double projectGrade, labGrade, quizGrade, examGrade, finalGrade, totalGrade;
+    string letterGrade;
+
+    projectGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+    
+    labGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+
+    quizGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+    examGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+    finalGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+
+    totalGrade = std::stod(inputStringCopy.substr(0, position));
+    inputStringCopy.erase(0, position + delimiter.length());
+    position = inputStringCopy.find(delimiter);
+
+
+    letterGrade = inputStringCopy.substr(0, position);
+
     cout << "=========================================================\n" 
     << "Project: "      << setw(23) << fixed << setprecision(2) << projectGrade * TO_PERCENT    << "%\n" 
     << "Lab: "          << setw(27)                             << labGrade * TO_PERCENT        << "%\n"
@@ -183,55 +222,15 @@ void printResults(double projectGrade, double labGrade, double quizGrade, double
     << "=========================================================\n" << endl;
 }
 
-/*
- * @author: Emily Hsu
- * @param: User's new password
-*/
-int userLogin(string newPassword){
-    int i=0, access = 0, userSelect;
-    string username, password;
-
-    const string password1 = "abc", password2 = "123";
-    cout << "---------------------------------------------------------" << endl;
-    cout << "Enter your username: " << endl;
-    cin >> username;
-    cout << "Enter your password: " << endl;
-    cin >> password;
-
-    if ((password == password1)|(password == password2)|(password == newPassword)){
-        access = 1;
-    }
-    while(access != 1){
-        cout << "---------------------------------------------------------\n" 
-             << "Password is wrong, try again." << endl;
-        cin >> password;
-        if ((password == password1)|(password == password2)|(password == newPassword)){
-            access = 1;
-            break;
-        }
-        i++;
-        if (i==2){
-            cout << "=========================================================\n" 
-                 << "You failed to input the correct password." 
-                 << "\n=========================================================\n" 
-                 << endl;
-            break;
-        }
-    } 
-    return access;
-}
 
 /*
  * @author: Natasha Kho
  * @author: Emily Hsu
 */
-int printMenu(void){
-    int userSelect = 0;
-    cout << "=========================================================\n" 
-             << "Select an option:\n1. Generate fake data\n2. Which score file to use\n3. Show student score report\n4. Change password\n5. Log out\n6. Exit program\n" 
-             << "=========================================================" << endl;
-    cin >> userSelect;
-    return userSelect;
+std::string printMenu(void){
+    std::string outputString;
+    outputString =  "=========================================================\nSelect an option:\n1. Generate fake data\n2. View grade report.\n3. Which score file to use\n4. Generate grade report\n5. Change password\n6. Log out\n7. Exit program\n=========================================================";
+    return outputString;
 }
 
 /*
@@ -281,4 +280,38 @@ string setNewPassword(void){
 
 /*
  * @author: Emily Hsu
+ * @param: User's new password
 */
+int userLogin(string newPassword){
+    int i=0, access = 0, userSelect;
+    string username, password;
+
+    const string password1 = "abc", password2 = "123";
+    cout << "---------------------------------------------------------" << endl;
+    cout << "Enter your username: " << endl;
+    cin >> username;
+    cout << "Enter your password: " << endl;
+    cin >> password;
+
+    if ((password == password1)|(password == password2)|(password == newPassword)){
+        access = 1;
+    }
+    while(access != 1){
+        cout << "---------------------------------------------------------\n" 
+             << "Password is wrong, try again." << endl;
+        cin >> password;
+        if ((password == password1)|(password == password2)|(password == newPassword)){
+            access = 1;
+            break;
+        }
+        i++;
+        if (i==2){
+            cout << "=========================================================\n" 
+                 << "You failed to input the correct password." 
+                 << "\n=========================================================\n" 
+                 << endl;
+            break;
+        }
+    } 
+    return access;
+}
