@@ -54,12 +54,11 @@ int main (void){
                     fileName = checkFile();
                     userFile.open(fileName);
                 } 
-                generateGradeReport(inFile);
                 report = 1;
                 cout << "Would you like to view your grade report? (Y/N)" << endl;
                 cin >> viewReport;
                 if (viewReport == "Y"){
-                    printResults(generateGradeReport(inFile));
+                    printResults(generateGradeReport(userFile));
                 }
                 upload = 0;
                 userFile.close();

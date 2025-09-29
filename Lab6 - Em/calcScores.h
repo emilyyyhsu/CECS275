@@ -155,11 +155,12 @@ std::string generateGradeReport(fstream& file){
                                    + projectGrade + finalGrade;
     
     string letterGrade = getLetterGrade(totalGrade);
-
     // has to be split
-    return garbage = std::to_string(projectGrade) + "<" + std::to_string(labGrade) + "<" 
+    
+    garbage = std::to_string(projectGrade) + "<" + std::to_string(labGrade) + "<" 
             + std::to_string(quizGrade) + "<" + std::to_string(examGrade) +  "<"  
             + std::to_string(finalGrade) + "<" + std::to_string(totalGrade) + "<" + (letterGrade);
+    return garbage;
 }
 
 /*
@@ -175,6 +176,7 @@ std::string generateGradeReport(fstream& file){
  * @param: final letter grade 
 */
 void printResults(std::string inputString){
+    cout << inputString;
     string inputStringCopy = inputString;
     string delimiter = "<";
     int position = inputStringCopy.find(delimiter);
