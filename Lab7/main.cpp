@@ -16,10 +16,11 @@
  * scores for each assignment. generateReport uses all of the previous functions to create a text file with the generated score file. 
  * On a separate header file, we have added other functions for the user’s experience, such as a log-in function with an option 
  * to change the password and a function to upload a score file that can be used to generate a grade report.
-*/
+
 int main (void){
     fstream inFile, userFile;
     string fileName, newPassword, viewReport;
+    
     int userSelect, upload = 0, report = 0;
 
     // Prompt initial login
@@ -84,3 +85,4 @@ int main (void){
         cout << "Bye bye!" << endl;
     }
 }
+*/

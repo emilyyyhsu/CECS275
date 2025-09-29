@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <vector>
 #include "randGen.h"
 
 // Function prototypes
@@ -38,13 +39,14 @@ const double GradeA = 0.90,
 /*
  * @author: Natasha Kho
  * @param: filestream file variable
- * @return total number of assignments for one category 
+ * @param: reference integer array of length 5
 */
-int getTotalAssignments(fstream& file){
+void getTotalAssignments(fstream& file, int (&totalAssignmentsArray)[5]){
     // First line of file
-    int totalAssignments = 0;
-    file >> totalAssignments;
-    return totalAssignments;
+    for(int i = 0; i < 5; i++ ){
+        file >> totalAssignmentsArray[i];
+    }
+    
 }
 
 /*
@@ -54,7 +56,7 @@ int getTotalAssignments(fstream& file){
  * @param: amount of assignments to iterate through
  * @return total score of one category of assignment with the lowest grade dropped
 */
-double dropLowestScore(fstream& file, int iterationAmount){
+double dropLowestScore(fstream& file, int iterationAmount, int amountDropped){
     int currScore, 
         lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
     double total = 0; // want to return a double for data-type math reasons later
@@ -79,14 +81,33 @@ double dropLowestScore(fstream& file, int iterationAmount){
  * @param: amount of assignments to iterate through
  * @return total score of one category of assignment
 */
-double getPoints(fstream& file, int iterationAmount){
-    int score = 0;
-    double total = 0;
-    for(int i = 0; i < iterationAmount; i++){
-        file >> score;
-        total += score;
+void getPoints(fstream& file, int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades){
+    double temp;
+    for(int i = 0; i < allGrades.size(); i++){
+        for(int j = 0; j < allGrades[i].size(); j++){
+            for(int k = 0; k < allGrades[i][j].size(); k++){
+                file >> allGrades[i][j][k];
+            }
+        }
     }
-    return total;
+    // for(int i = 0; i < totalAssignmentAmount; i++){
+    //     file >> totalScoreArray[i];
+    // }
+}
+
+// THIS NEEDS WORK
+void populateGradeVector(int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades){
+    for(int i = 0; i < 40; i++){ // students in a class
+        for(int j = 0; j < 5; j++){ // assignments per student
+            vector<double> temp; // this will contain all of the scores of each category
+            for(int k = 0; k < totalAssignmentAmount[j]; k++){ // iterates through amount of grades for each category
+                temp.push_back(0);
+                cout << temp[k] << ' ';
+            }
+            cout << endl;
+            allGrades[i].push_back(temp);
+        }
+    }
 }
 
 /*
@@ -122,7 +143,7 @@ double calculatePercentage(double grade, double total, double gradeWeight){
  * @author: Natasha Kho
  * @author: Emily Hsu
  * @param: score file
-*/
+
 std::string generateGradeReport(fstream& file){
     std::string garbage;
     // Amount of assignments in each category
@@ -157,23 +178,16 @@ std::string generateGradeReport(fstream& file){
     string letterGrade = getLetterGrade(totalGrade);
     // has to be split
     
-    garbage = std::to_string(projectGrade) + "<" + std::to_string(labGrade) + "<" 
+    return garbage = std::to_string(projectGrade) + "<" + std::to_string(labGrade) + "<" 
             + std::to_string(quizGrade) + "<" + std::to_string(examGrade) +  "<"  
             + std::to_string(finalGrade) + "<" + std::to_string(totalGrade) + "<" + (letterGrade);
-    return garbage;
-}
+}*/
 
 /*
  * @author: Emily Hsu
  * @author Natasha Kho (Formatting)
  * couts the report
  * @param: weighted project grade as decimal
- * @param: weighted lab grade as decimal
- * @param: weighted quiz grade as decimal
- * @param: weighted exam grade as decimal
- * @param: weighted final grade as decimal
- * @param: total grade earned as decimal
- * @param: final letter grade 
 */
 void printResults(std::string inputString){
     cout << inputString;
