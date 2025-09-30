@@ -35,7 +35,6 @@ int generateAssignmentAmount(int maxAssignments){
     return numAssignments = min + rand() % (maxAssignments - min);
 }
 
-
 /*
  * @author: Natasha Kho
  * @param: file to write to
