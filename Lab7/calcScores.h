@@ -50,29 +50,54 @@ void getTotalAssignments(fstream& file, int (&totalAssignmentsArray)[5]){
 }
 
 /*
- * @author: Emily Hsu
- * @author: Natasha Kho
- * @param: filestream file variable
- * @param: amount of assignments to iterate through
- * @return total score of one category of assignment with the lowest grade dropped
+ * Work in progress. struggling
+ * currently, it just erases whatever is at the default 0 index.
 */
-double dropLowestScore(fstream& file, int iterationAmount, int amountDropped){
-    int currScore, 
-        lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
-    double total = 0; // want to return a double for data-type math reasons later
+void dropLowestScore(fstream& file, int (&totalAssignments)[5], int (&totalAssignmentsDropped)[5], vector<vector<vector<double>>> (&allGrades)){
+    int lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
 
-    for(int i = 0; i < iterationAmount; i++){
-        file >> currScore; // Gets score
+    vector<int> indexesToDrop; // size of this should equal to totalAssignmentsDropped[respective index]
+                                // ie. 0, 1, 2, etc.
+    indexesToDrop.push_back(0);
 
-        if(currScore <= lowestScore){ // if the previous score is lower than the current score
-            lowestScore = currScore; // then, we put the previous score as the lowest score
-            // cout << "LOWEST SCORE " << i << " " << lowestScore << endl;
+    // this iterates through all the students (41 total, skip first line)
+    for(int i = 0; i < allGrades.size(); i++ ){
+
+        // this iterates through a student's assignment categories (5 total)
+        for(int j = 0; j < allGrades[i].size(); j++){
+
+            // this checks to see if there's any assignments in a specific category that needs to be dropped
+            if(totalAssignmentsDropped[j] != 0){
+                cout << "AT J: " << j << " ASSIGNMENT TO BE DROPPED DETECTED ::: " << totalAssignmentsDropped[j] << endl;
+
+                // this iterates through a student's assignment's grades 
+                // (ie. lab grades, then quiz grades, then exam grades, etc.)
+                for(int k = 0; k < allGrades[i][j].size(); k++){
+
+                    // this iterates through the indexes for the lowest score
+                    for(int n = 0; n < indexesToDrop.size(); n++){
+
+                        // if all of the current values of indexesToDrop are lower than the current value of allGrades, 
+                        // then it's added to get dropped
+                        if(allGrades[i][j][k] < allGrades[i][j][indexesToDrop[n]] && indexesToDrop.size() < totalAssignmentsDropped[j]){
+                            indexesToDrop.push_back(k);
+                            cout << "TEST0" << endl;
+                        } else if(allGrades[i][j][k] < allGrades[i][j][indexesToDrop[n]]){
+                            indexesToDrop[n] = k;
+                            cout << "TEST" << endl;
+                        }
+                        
+                    }
+                }
+                for(int n = 0; n < indexesToDrop.size(); n++){
+                    allGrades[i][j].erase(allGrades[i][j].begin() + indexesToDrop[n]);
+                }
+                indexesToDrop.clear();
+                indexesToDrop.push_back(0);
+            }
         }
-        // We add the current score to the total, regardless of how low it is
-        total += currScore;
     }
-    total -= lowestScore;
-    return total;
+    
 }
 
 /*
@@ -96,17 +121,21 @@ void getPoints(fstream& file, int (&totalAssignmentAmount)[5], vector<vector<vec
 }
 
 // THIS NEEDS WORK
-void populateGradeVector(int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades){
-    for(int i = 0; i < 40; i++){ // students in a class
-        for(int j = 0; j < 5; j++){ // assignments per student
-            vector<double> temp; // this will contain all of the scores of each category
+// maybe make another one that does the same thing but only grabs the first line
+void populateGradeVector(int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades, int amountOfStudents){
+    for(int i = 0; i < amountOfStudents + 1; i++){ // iterate 40 times because 40 students
+        vector<vector<double>> studentScore; // Students' scores
+        for(int j = 0; j < 5; j++){ // iterate 5 times because 5 categories per student
+            vector<double> individualGrades;
             for(int k = 0; k < totalAssignmentAmount[j]; k++){ // iterates through amount of grades for each category
-                temp.push_back(0);
-                cout << temp[k] << ' ';
+                individualGrades.push_back(0);
+                cout << individualGrades[k] << ' ';
             }
+            studentScore.push_back(individualGrades);
             cout << endl;
-            allGrades[i].push_back(temp);
         }
+         allGrades.push_back(studentScore); // pushing data for one student
+                                            // allGrades[i] = push back needs to contain vector<vector<double>
     }
 }
 

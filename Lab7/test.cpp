@@ -11,25 +11,18 @@ void testPrintVector(vector<vector<vector<double>>> &allGrades);
 
 int main(void){
     fstream input;
-    //input.open("scores.txt");
-    input.open("new_scores.txt");
+    input.open("scores.txt");
+    //input.open("new_scores.txt");
 
     int totalAssignments[5];
     int totalAssignmentsDropped[5];
 
     //  rows go in such fashion:
-    //  * all total lab points
-    //  * all total quiz points
-    //  * all total exam points
+    //  * all total lab/quiz/exam/project points
+    //  * first students' grades
+    //  * second students' grades
     //  * and so on and so on
-    vector<vector<vector<double>>> possiblePoints;
-
-    //  rows go:
-    //  * all earned lab points
-    //  * all earned quiz points
-    //  * all earned exam points
-    //  * and so on and so on
-    vector<vector<vector<double>>> earnedPoints;
+    vector<vector<vector<double>>> allGrades;
     
     // First line of file
     getTotalAssignments(input,totalAssignments);
@@ -43,23 +36,18 @@ int main(void){
         cout << "Total Assignments Dropped: " << val  << endl;
     }
 
+    // PROBLEM: This is looping through the entire file, we only want this to grab the first line
     cout << "===========================================\nPOPULATING POINTS POSSIBLE VECTOR" << endl;
-    populateGradeVector(totalAssignments, possiblePoints);
-    testPrintVector(possiblePoints); // should be a buncha 0s
+    populateGradeVector(totalAssignments, allGrades, 1);
+    testPrintVector(allGrades); // should be a buncha 0s
 
     cout << "===========================================\nINPUTTING POINTS" << endl;
-    getPoints(input, totalAssignments, possiblePoints);
-    testPrintVector(possiblePoints); // PLEASE PRINT NUMBERS PLEAAAAAAASE
-    // ive been at this for three hours im gonna fucking nut it works oh my god jesus is real
+    getPoints(input, totalAssignments, allGrades);
+    testPrintVector(allGrades); // PLEASE PRINT NUMBERS PLEAAAAAAASE
 
-    cout << "===========================================\nPOPULATING POINTS EARNED VECTOR" << endl;
-    populateGradeVector(totalAssignments, earnedPoints);
-    testPrintVector(earnedPoints); // should be a buncha 0s
-
-    cout << "===========================================\nINPUTTING GRADES" << endl;
-    getPoints(input,totalAssignments, earnedPoints);
-    testPrintVector(earnedPoints); // PLEASE PRINT NUMBERS PLEAAAAAAASE
-    
+    cout << "===========================================\nDROPPED LOWEST POINTS" << endl;
+    dropLowestScore(input, totalAssignments, totalAssignmentsDropped,allGrades );
+    testPrintVector(allGrades);
     return 1;
 }
 
