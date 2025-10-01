@@ -23,7 +23,7 @@ void loginMenu(int userSelect){
     }
 }
 
-void register(string username, string password){
+void registerUser(string username, string password){
     ofstream registration;
     string userLogin = "login.txt";
     registration.open(userLogin);

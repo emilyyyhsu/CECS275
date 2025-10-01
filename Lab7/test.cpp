@@ -17,6 +17,7 @@ int main(void){
     int totalAssignments[5];
     int totalAssignmentsDropped[5];
     vector<double> calculatedPercentages;
+    vector<double> averageScore;
 
     //  rows go in such fashion:
     //  * all total lab/quiz/exam/project points
@@ -25,8 +26,8 @@ int main(void){
     //  * and so on and so on
     vector<vector<vector<double>>> allGrades;
     vector<double> individualStudentScores;
-    generateReportOneStudent(input, individualStudentScores, allGrades, totalAssignmentsDropped, totalAssignments, 0, 1, calculatedPercentages);
-    printResults(calculatedPercentages);
+    generateReportClass(input, allGrades, totalAssignmentsDropped, totalAssignments, 0, 1, calculatedPercentages,averageScore);
+    //printResults(calculatedPercentages,averageScore);
     return 1;
 }
 

@@ -34,19 +34,6 @@ const double GradeA = 0.90,
              GradeD = 0.60;
 
 /*
- * @author: Natasha Kho
- * @param: filestream file variable
- * @param: reference integer array of length 5
-*/
-void getTotalAssignments(fstream& file, int (&totalAssignmentsArray)[5]){
-    // First line of file
-    for(int i = 0; i < 5; i++ ){
-        file >> totalAssignmentsArray[i];
-    }
-    
-}
-
-/*
  * Work in progress. struggling
  * currently, it just erases whatever is at the default 0 index.
 */
@@ -107,6 +94,19 @@ void getPoints(fstream& file, int (&totalAssignmentAmount)[5], vector<vector<vec
     // }
 }
 
+/*
+ * @author: Natasha Kho
+ * @param: filestream file variable
+ * @param: reference integer array of length 5
+*/
+void getTotalAssignments(fstream& file, int (&totalAssignmentsArray)[5]){
+    // First line of file
+    for(int i = 0; i < 5; i++ ){
+        file >> totalAssignmentsArray[i];
+    }
+    
+}
+
 // THIS is ok
 void populateGradeVector(int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades, int amountOfStudents){
     for(int i = 0; i < amountOfStudents + 1; i++){ // iterate 40 times because 40 students
@@ -162,6 +162,14 @@ void calculatePercentage(double grade, double total, double gradeWeight, vector<
     calculatedPercentages.push_back((grade/total) * gradeWeight);
 }
 
+void getAverageOfIndividualStudent(double pointsEarned, int amountOfAssignments, vector<double> &averageOfSingleCategory){
+    averageOfSingleCategory.push_back(pointsEarned/amountOfAssignments);
+}
+
+/*
+ * @author: Natasha Kho
+ * returns totalEarnedPoints (which is points earned in each category)
+*/
 void getIndividualStudentPointsTotal(vector<vector<vector<double>>> &allGrades, int studentNumber, int (&totalAssignments)[5], vector<double> &totalEarnedPoints){
     vector<double> oneStudentScore;
     for(int i = studentNumber; i < allGrades.size(); i++){
@@ -188,18 +196,85 @@ void getIndividualStudentPointsTotal(vector<vector<vector<double>>> &allGrades, 
     }
 }
 
-// void testPrintVector(vector<vector<vector<double>>> &allGrades){
-//     for(int i = 0; i < allGrades.size(); i++){
-//         for(int j = 0; j < allGrades[i].size(); j++){
-//             for(int k = 0; k < allGrades[i][j].size(); k++){
-//                 cout << allGrades[i][j][k] << " ";
-//             }
-//         }
-//         cout << endl;
-//     }
-// }
+void getClassAverageForOneCategory(vector<vector<vector<double>>> &allGrades, int (&totalAssignments)[5], int assignmentType, vector<double> &totalEarnedPoints){
+    vector<vector<double>> pointsEarnedForOneCategory;
+    
+    for(int i = 1; i < allGrades.size(); i++){
+        for(int j = 0; j < allGrades[assignmentType].size(); j++){
+            for(int k = 0; k < allGrades[i][j].size(); k++){
+                //pointsEarnedForOneCategory[i].push_back(allGrades[i][assignmentType][k]); // this line breaks program on first iteration :: index 0
+                cout << "checking index " << allGrades[i][assignmentType][k] << endl;
+            }
+            cout << endl;
+            break;
+        }
+    }
 
-void generateReportOneStudent(fstream &inputFile, vector<double> (&oneStudentScore), vector<vector<vector<double>>> &allGrades, int (&totalAssignmentsDropped)[5], int (&totalAssignments)[5], int isGradesDropped, int studentNumber, vector<double> &calculatedPercentages){
+    // this totals the points earned in each category by each student
+    int cursor = 0;
+    for(int assignmentInCategory: totalAssignments){
+        double temp = 0;;
+        cout << "\nAssignment amount in Category: " << assignmentInCategory << endl;
+
+        for(int i = 0; i < assignmentInCategory; i++){
+            for(int j = 0; j < pointsEarnedForOneCategory[i].size(); j++){
+                temp += pointsEarnedForOneCategory[i][cursor];
+
+                cout << "TEMP " << temp << " ";
+                cout << "score " << pointsEarnedForOneCategory[i][cursor] << " ";
+                cursor++;
+            }
+        }
+        totalEarnedPoints.push_back(temp);
+    }
+}
+
+/*
+ * @author: Natasha Kho
+*/
+void generateReportClass(fstream &inputFile, vector<vector<vector<double>>> &allGrades, int (&totalAssignmentsDropped)[5], int (&totalAssignments)[5], 
+                         int isGradesDropped, int studentNumber, vector<double> &calculatedPercentages, vector<double> &averageScores){
+    // First line of file
+    getTotalAssignments(inputFile,totalAssignments);
+
+    getTotalAssignments(inputFile,totalAssignmentsDropped);
+
+    populateGradeVector(totalAssignments, allGrades, 40);
+
+    getPoints(inputFile, totalAssignments, allGrades);
+
+    // used for calculations
+    vector<double> totalEarnedPoints;
+    vector<double> totalPointsPossible;
+    if(isGradesDropped){
+        // Do the stuff to drop the lowest grade as per requested wahoo!
+        for(int i = 0; i < sizeof(totalAssignmentsDropped)/sizeof(totalAssignmentsDropped[0]); i++){
+        int amtOfAssignmentsToDrop = totalAssignmentsDropped[i];
+            while(amtOfAssignmentsToDrop){
+                //cout << "AT I: " << i << " ASSIGNMENT TO BE DROPPED DETECTED ::: " << totalAssignmentsDropped[i] << endl;
+                dropLowestScore(inputFile, allGrades,i );
+                amtOfAssignmentsToDrop--;
+            }
+        }
+    }
+
+    cout << "BEFORE FOR LOOP " << endl <<endl;
+    for(int i = 0; i < 5; i++){ // goes until  length of array
+        cout << "FOR LOOP INDEX: " << i << endl;
+        getClassAverageForOneCategory(allGrades, totalAssignments, i, totalEarnedPoints); // student score is totalEarnedPoints
+        getClassAverageForOneCategory(allGrades, totalAssignments, i, totalPointsPossible);
+    }
+    
+    
+    // this calculates the percentages for one student
+    //  calculatePercentage(double grade, double total, double gradeWeight, vector<double> &calculatedPercentages)
+    for(int i = 0; i < totalEarnedPoints.size(); i++){
+        calculatePercentage(totalEarnedPoints[i], totalPointsPossible[i], gradeWeights[i], calculatedPercentages);
+        getAverageOfIndividualStudent(totalEarnedPoints[i], totalAssignments[i], averageScores);
+    }
+}
+
+void generateReportOneStudent(fstream &inputFile, vector<vector<vector<double>>> &allGrades, int (&totalAssignmentsDropped)[5], int (&totalAssignments)[5], int isGradesDropped, int studentNumber, vector<double> &calculatedPercentages, vector<double> &averageScores){
     // First line of file
     getTotalAssignments(inputFile,totalAssignments);
     // for(int val: totalAssignments){
@@ -249,34 +324,42 @@ void generateReportOneStudent(fstream &inputFile, vector<double> (&oneStudentSco
     //  calculatePercentage(double grade, double total, double gradeWeight, vector<double> &calculatedPercentages)
     for(int i = 0; i < totalEarnedPoints.size(); i++){
         calculatePercentage(totalEarnedPoints[i], totalPointsPossible[i], gradeWeights[i], calculatedPercentages);
+        getAverageOfIndividualStudent(totalEarnedPoints[i], totalAssignments[i], averageScores);
         // cout << "Total Earned Points at index: " << i << " produces: " << totalEarnedPoints[i] << endl;
         // cout << "Total Points Possible at index: " << i << " produces: " << totalPointsPossible[i] << endl;
     }
-    cout << "\nPERCENTAGES: ";
-    for(double x: calculatedPercentages){
-        cout << x << " ";
-    }
-    cout << endl;
+    // cout << "\nPERCENTAGES: ";
+    // for(double x: calculatedPercentages){
+    //     cout << x << " ";
+    // }
+    // cout << endl;
 }
 
 /*
- * @author: Emily Hsu
- * @author Natasha Kho (Formatting)
+ * @author Natasha Kho
  * couts the report
  * @param: weighted project grade as decimal
 */
-void printResults(vector<double> calculatedPercentages){
+void printResults(vector<double> calculatedPercentages, vector<double> averageScores){
     string letterGrade = getLetterGrade(calculatedPercentages);
 
-    cout << "=========================================================\n" 
+    cout << "===============================================\n" << setw(20) << "GRADES"           << "\n"
     << "Project: "      << setw(23) << fixed << setprecision(2) << calculatedPercentages[0] * TO_PERCENT    << "%\n" 
-    << "Lab: "          << setw(27)                             << calculatedPercentages[1] * TO_PERCENT        << "%\n"
-    << "Quiz: "         << setw(26)                             << calculatedPercentages[2] * TO_PERCENT       << "%\n"
-    << "Exams: "        << setw(25)                             << calculatedPercentages[3] * TO_PERCENT       << "%\n"
-    << "Final Exam: "   << setw(20)                             << calculatedPercentages[4] * TO_PERCENT      << "%\n"
-    << "Total: "        << setw(25)                             << calculatedPercentages[5] * TO_PERCENT      << "%\n"
-    << "Final Letter Grade: "                                   << letterGrade                  << "\n"
-    << "=========================================================\n" << endl;
+    << "Lab: "          << setw(27)                             << calculatedPercentages[1] * TO_PERCENT    << "%\n"
+    << "Quiz: "         << setw(26)                             << calculatedPercentages[2] * TO_PERCENT    << "%\n"
+    << "Exams: "        << setw(25)                             << calculatedPercentages[3] * TO_PERCENT    << "%\n"
+    << "Final Exam: "   << setw(20)                             << calculatedPercentages[4] * TO_PERCENT    << "%\n"
+    << "Total: "        << setw(25)                             << calculatedPercentages[5] * TO_PERCENT    << "%\n"
+    << "Final Letter Grade: " << setw(10)                       << letterGrade                              << "\n"
+    << "===============================================\n" << endl;
+
+    cout << "===============================================\n" << setw(25) << "AVERAGE GRADES" << "\n"
+    << "Project: "      << setw(23) << fixed << setprecision(2) << averageScores[0]             << "%\n" 
+    << "Lab: "          << setw(27)                             << averageScores[1]             << "%\n"
+    << "Quiz: "         << setw(26)                             << averageScores[2]             << "%\n"
+    << "Exams: "        << setw(25)                             << averageScores[3]             << "%\n"
+    << "Final Exam: "   << setw(20)                             << averageScores[4]             << "%\n"
+    << "===============================================\n" << endl;
 }
 
 
