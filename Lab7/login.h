@@ -12,6 +12,9 @@ void login(vector<string> usernameBank, vector<string> passwordBank);
 void setNewPassword(vector<string> usernameBank, vector<string> passwordBank);
 int user_login(vector<string> usernameBank, vector<string> passwordBank);
 
+/*
+ * @author Emily Hsu
+*/
 void registration(vector<string> &usernameBank, vector<string> &passwordBank){
     string nUsername, nPassword;
 
@@ -33,6 +36,9 @@ void registration(vector<string> &usernameBank, vector<string> &passwordBank){
 
 }
 
+/*
+ * @author Emily Hsu
+*/
 void login(vector<string> usernameBank, vector<string> passwordBank){
     int i, index, access = 0, attempt = 0;
     string mUsername, mPassword;
@@ -73,6 +79,9 @@ void login(vector<string> usernameBank, vector<string> passwordBank){
     }while(access==0);
 }
 
+/*
+ * @author Emily Hsu
+*/
 void setNewPassword(vector<string> usernameBank, vector<string> passwordBank){
     int i, match=0, index;
     string username, newPassword;
@@ -105,15 +114,11 @@ void setNewPassword(vector<string> usernameBank, vector<string> passwordBank){
     cout << "Successfully changed password! Returning to login..." << endl;
 }
 
-
-int user_login(vector<string> usernameBank, vector<string>passwordBank){
-    int userSelect, access, user = 0;
-    /*
-     * 1. registration
-     * 2. login
-     * 3. change/forgot password
-    */
-
+/*
+ * @author Emily Hsu
+*/
+int user_login(int accountMade, vector<string> &usernameBank, vector<string> &passwordBank){
+    int userSelect, access, user;
     do{
         cout << "Choose an option:\n1. Register\n2. Login\n3. Change or forgot password" << endl;
         cin >> userSelect;
@@ -121,29 +126,29 @@ int user_login(vector<string> usernameBank, vector<string>passwordBank){
         switch(userSelect){
         case 1: 
             registration(usernameBank, passwordBank);
-            if(user == 0){
+            if(accountMade != 1){
                 userSelect = 2;
                 break;
             }
-            user = 1;
+            accountMade = 1;
             break;
         
         case 2: 
-            if(user == 0){
+            if(accountMade != 1){
                 registration(usernameBank, passwordBank);
                 userSelect= 2;
                 break;
             } login(usernameBank, passwordBank);
-            user = 1;
+            accountMade = 1;
             break;
 
         case 3: 
-            if (user == 0){
+            if (accountMade != 1){
                 registration(usernameBank, passwordBank);
                 userSelect = 2;
                 break;
             } setNewPassword(usernameBank, passwordBank);
-            user = 1;
+            accountMade = 1;
             break;
 
         default: 

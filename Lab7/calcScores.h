@@ -37,8 +37,7 @@ const double GradeA = 0.90,
              GradeD = 0.60;
 
 /*
- * Work in progress. struggling
- * currently, it just erases whatever is at the default 0 index.
+ * @author Natasha Kho
 */
 void dropLowestScore(fstream& file,  vector<vector<vector<double>>> (&allGrades), int typeOfAssignment){
     //int lowestScore = 0x7FFFFFFF; // this is the maximum int in hex
@@ -110,7 +109,9 @@ void getTotalAssignments(fstream& file, int (&totalAssignmentsArray)[5]){
     
 }
 
-// THIS is ok
+/*
+ * @author Natasha Kho
+*/
 void populateGradeVector(int (&totalAssignmentAmount)[5], vector<vector<vector<double>>> &allGrades, int amountOfStudents){
     for(int i = 0; i < amountOfStudents + 1; i++){ // iterate 40 times because 40 students
         vector<vector<double>> studentScore; // Students' scores
@@ -166,17 +167,16 @@ void calculatePercentage(double grade, double total, double gradeWeight, vector<
 
 /*
  * @author: Natasha Kho
- * OVERLOADED FUNCTION
 */
 double calculateClassPercentage(double grade, double total, double gradeWeight, vector<vector<vector<double>>> &calculatedPercentages, int i, int j){
     return ((grade/total) * gradeWeight);
 }
 
+/*
+ * @author: Natasha Kho
+*/
 void getAverageOfCategory(double pointsEarned, int amountOfAssignments, vector<double> &averageOfSingleCategory){
     averageOfSingleCategory.push_back(pointsEarned/amountOfAssignments);
-    // for(double x : averageOfSingleCategory){
-    //     cout << x << " ";
-    // }
 }
 
 /*
@@ -201,8 +201,6 @@ void getIndividualStudentPointsTotal(vector<vector<vector<double>>> &allGrades, 
         //cout << "\nAssignment amount in Category: " << assignmentInCategory << endl;
         for(int i = 0; i < assignmentInCategory; i++){
             temp += oneStudentScore[cursor];
-            // cout << "TEMP " << temp << " ";
-            //cout << "score " << oneStudentScore[cursor] << " ";
             cursor++;
         }
         totalEarnedPoints.push_back(temp);

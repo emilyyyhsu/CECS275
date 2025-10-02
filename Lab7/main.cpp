@@ -4,20 +4,11 @@
  * @author: Natasha Kho
  * @author: Emily Hsu
  * Created on: 2025-09-11
- * Last Modified: 2025-09-15
+ * Last Modified: 2025-10-01
  * Reference: 
 */
 #include "calcScores.h"
 #include "login.h"
-
-/* 
- * Our new code of Lab 6 breaks down Lab 5 into separate functions. We’ve created four main functions to generate a score report. 
- * generateAssignmentAmount randomly generates the number of assignments for each category. generateMaxScores uses the previously 
- * generated number of assignments to generate the maximum possible score for each category. generateScores randomly generates 
- * scores for each assignment. generateReport uses all of the previous functions to create a text file with the generated score file. 
- * On a separate header file, we have added other functions for the user’s experience, such as a log-in function with an option 
- * to change the password and a function to upload a score file that can be used to generate a grade report.
-*/
 
 fstream inFile, userFile, inputFile;
 string fileName, newPassword, viewReport, dropped;
@@ -28,7 +19,7 @@ int studentNumber, userSelect, upload = 0, report = 0, isGradesDropped, totalAss
 
 int main(void){
     // Prompt initial login
-    user_login(usernameBank, passwordBank);
+    user_login(0, usernameBank, passwordBank);
     
     do{
         // Prints menu and gets user's input
@@ -109,7 +100,7 @@ int main(void){
         // Log out 
         case 6:
             cout << "Logging out..." << endl;
-            user_login(usernameBank, passwordBank);
+            user_login(1, usernameBank, passwordBank);
         // Exit program
         case 7: 
             break;
