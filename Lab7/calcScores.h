@@ -27,7 +27,7 @@ void generateReportClass(fstream &inputFile, vector<vector<vector<double>>> &all
 using namespace std;
 
 // Grade weights
-const double gradeWeights[5] = {0.10, 0.15, .15, 0.40, 0.20};
+const double gradeWeights[5] = {0.15, 0.15, .40, 0.10, 0.20};
 
 // Converts fractional value to percentage
 const int TO_PERCENT = 100;
@@ -137,7 +137,6 @@ std::string getLetterGrade(vector<double> &calculatedPercentages){
     double totalGrade;
     for(int i = 0; i < calculatedPercentages.size(); i++){
         totalGrade += calculatedPercentages[i];
-        cout << calculatedPercentages[i] << endl;
     }
     // cout << "Total Grade: " << totalGrade <<endl;
     calculatedPercentages.push_back(totalGrade);
@@ -162,8 +161,7 @@ std::string getLetterGrade(vector<double> &calculatedPercentages){
  * @return percentage of specific category
 */
 void calculatePercentage(double grade, double total, double gradeWeight, vector<double> &calculatedPercentages){
-    // cout << "GRADE: " << grade << "TOTAL: " << total << "GRADEWEIGHT: " << gradeWeight;
-    calculatedPercentages.push_back((grade/total) * gradeWeight);
+    calculatedPercentages.push_back((grade/total)*gradeWeight);
 }
 
 /*
