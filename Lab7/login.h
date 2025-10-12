@@ -7,151 +7,175 @@
 
 using namespace std;
 
-void registration(vector<string> &usernameBank, vector<string> &passwordBank);
-void login(vector<string> usernameBank, vector<string> passwordBank);
-void setNewPassword(vector<string> usernameBank, vector<string> passwordBank);
-int user_login(vector<string> usernameBank, vector<string> passwordBank);
+vector<string> makeUsernameBank(void)
+{
+    ifstream inFile("login.txt");
+    string username, password;
+    vector<string> usernameBank;
+    while(inFile >> username >> password)
+    {
+        usernameBank.push_back(username);
+    }
+    return usernameBank;
+}
 
-/*
- * @author Emily Hsu
-*/
-void registration(vector<string> &usernameBank, vector<string> &passwordBank){
-    string nUsername, nPassword;
+vector<string> makePasswordBank(void)
+{
+    ifstream inFile("login.txt");
+    string username, password;
+    vector<string> passwordBank;
+    while(inFile >> username >> password)
+    {
+        passwordBank.push_back(password);
+    }
+    return passwordBank;
+}
+
+void updateInfo(vector<string> usernameBank, vector<string> passwordBank)
+{
+    ofstream outFile("login.txt");
+    for(int i = 0; i < usernameBank.size(); i++){
+        outFile<< usernameBank[i] << " " << passwordBank[i] << endl;
+    }
+}
+
+void registration(void)
+{
+    ofstream outFile("login.txt", ios::app);
+    vector<string> usernameBank, passwordBank;
+    string nUsername, nPassword, username;
+
+    usernameBank = makeUsernameBank();
+    passwordBank = makePasswordBank();
 
     cout << "Enter a new username: " << endl;
     cin >> nUsername;
-    for(int i=0;i<usernameBank.size();i++){
-        while(nUsername == usernameBank[i]){
+    
+    for(string username : usernameBank)
+    {
+        while (nUsername == username)
+        {
             cout << "Username already exists. Please choose another one." << endl;
             cin >> nUsername;
         }
     }
+
     cout << "Enter a new password: " << endl;
     cin >> nPassword;
 
-    usernameBank.push_back(nUsername);
-    passwordBank.push_back(nPassword);
+    outFile << nUsername << " " << nPassword << endl;
 
     cout << "Successfully registered!" << endl;
-
 }
 
-/*
- * @author Emily Hsu
-*/
-void login(vector<string> usernameBank, vector<string> passwordBank){
-    int i, index, access = 0, attempt = 0;
-    string mUsername, mPassword;
+void login(void)
+{
+    vector<string> usernameBank, passwordBank;
+    string mUsername, mPassword, username, password;
+    int index = 0, access = 0, attempt = 0;
 
-    cout << "Enter your username: " << endl;
-    cin >> mUsername;
-    do{
-        for(i=0;i<usernameBank.size();i++){
-            if (mUsername == usernameBank[i]){
+    usernameBank = makeUsernameBank();
+    passwordBank = makePasswordBank();
+
+    do
+    {
+        if(attempt == 1){
+            cout << "Username does not exist. Please try again." << endl;
+        }
+
+        cout << "Enter your username: " << endl;
+        cin >> mUsername;
+
+        for(int i = 0; i < usernameBank.size();i++)
+        {
+            if(mUsername == usernameBank[i]){
                 index = i;
                 access = 1;
-                break;
-            }
-        }if(access == 0){
-            cout << "Username does not exist. Please try again." << endl;
-            cin >> mUsername;
-        }
-    }while(access==0);
-
-    access = 0;
-    cout << "Enter your password: " << endl;
-    cin >> mPassword;
-    do{
-        for(i=0;i<passwordBank.size();i++){
-            if(mPassword == passwordBank[i]){
-                access = 1;
-                break;
             }
         }
-        if(access == 0){
-            cout << "Password failed. Please try again." << endl;
-            cin >> mPassword;
+        attempt = 1;
+    } while(!access);
+    while(access){
+        cout << "Enter you password: " << endl;
+        cin >> mPassword;
+        if(mPassword == passwordBank[index])
+        {
+            break;
+        }
+        else
+        {
+            cout << "Password is incorrect. Please try again." << endl;
             attempt++;
-        }if(attempt == 3){
-                cout << "You failed to input the correct password." << endl;
-                break;
-        }
-    }while(access==0);
-}
-
-/*
- * @author Emily Hsu
-*/
-void setNewPassword(vector<string> usernameBank, vector<string> passwordBank){
-    int i, match=0, index;
-    string username, newPassword;
-
-    cout << "Enter your username: " << endl;
-    cin >> username;
-    do{
-        for(i=0;i<usernameBank.size();i++){
-            if(username == usernameBank[i]){
-                match = 1;
-                index = i;
+            if(attempt == 3){
+                cout << "Login failed. Returning to menu..." << endl;
                 break;
             }
-        } if (match == 0){
-            cout << "Username does not exist. Please try again." << endl;
-            cin >> username;
         }
-    }while(match == 0);
-    cout << "Enter your new password: " << endl;
-    cin >> newPassword;
-    cout << index << endl;
-    passwordBank.at(index) = newPassword;
-
-    for(const string& s : usernameBank){
-        cout << s << " ";
-    } for (const string& s : passwordBank){
-        cout << s << " ";
     }
-
-    cout << "Successfully changed password! Returning to login..." << endl;
 }
 
-/*
- * @author Emily Hsu
-*/
-int user_login(int accountMade, vector<string> &usernameBank, vector<string> &passwordBank){
+
+void setNewPassword(void)
+{
+    vector<string> usernameBank, passwordBank;
+    string mUsername, mPassword, nPassword;
+    int attempt = 0, index = 0, access = 0;
+
+    usernameBank = makeUsernameBank();
+    passwordBank = makePasswordBank();
+
+    do
+    {
+        if(attempt == 1){
+            cout << "Username does not exist. Please try again." << endl;
+        }
+
+        cout << "Enter your username: " << endl;
+        cin >> mUsername;
+
+        for(int i = 0; i < usernameBank.size();i++)
+        {
+            if(mUsername == usernameBank[i]){
+                index = i;
+                access = 1;
+            }
+        }
+        attempt = 1;
+    } while(!access);
+
+    cout << "Enter your current password: " << endl;
+    cin >> mPassword;
+    while(mPassword != passwordBank[index])
+    {
+        cout << "Password is incorrect. Please try again." << endl;
+        cin >> mPassword;
+    }
+    cout << "Enter your new password: " << endl;
+    cin >> nPassword;
+    passwordBank[index] = nPassword;
+
+    updateInfo(usernameBank, passwordBank);
+}
+
+
+
+void user_login(void){
     int userSelect, access, user;
     do{
-        cout << "Choose an option:\n"
-        << "1. Register\n"
-        << "2. Login\n"
-        << "3. Change or forgot password\n";
+        cout << "Choose an option:\n1. Register\n2. Login\n3. Change or forgot password" << endl;
         cin >> userSelect;
 
         switch(userSelect){
         case 1: 
-            registration(usernameBank, passwordBank);
-            if(accountMade != 1){
-                userSelect = 2;
-                break;
-            }
-            accountMade = 1;
+            registration();
             break;
         
         case 2: 
-            if(accountMade != 1){
-                registration(usernameBank, passwordBank);
-                userSelect= 2;
-                break;
-            } login(usernameBank, passwordBank);
-            accountMade = 1;
+            login();
             break;
 
         case 3: 
-            if (accountMade != 1){
-                registration(usernameBank, passwordBank);
-                userSelect = 2;
-                break;
-            } setNewPassword(usernameBank, passwordBank);
-            accountMade = 1;
+            setNewPassword();
             break;
 
         default: 
@@ -159,6 +183,5 @@ int user_login(int accountMade, vector<string> &usernameBank, vector<string> &pa
             break;
         }
     }while(userSelect != 2);
-   return 1;
+   
 }
- 

@@ -22,7 +22,7 @@ const int AMOUNT_OF_CATEGORIES[5] = {1, 1, 1, 1, 1};
 
 int main() {
     //initial log in
-    user_login(0, usernameBank, passwordBank);
+    user_login();
 
     do{
         printMenu();
@@ -86,7 +86,7 @@ int main() {
         case 7:
             cout << "Bye Bye for now :D!" << endl;
             cout << "Logging out..." << endl;
-            user_login(0, usernameBank, passwordBank);
+            user_login();
             break;
 
         //TRUE exit program
