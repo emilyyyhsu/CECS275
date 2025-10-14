@@ -77,7 +77,7 @@ int main() {
             vector_dumptruck(calculatedPercentages, averageScores, calculatedClassPercentages, allGrades);
             break;
             
-        //empty for LAB8
+        // Display and sort in the class grades by letter grade and total percentages
         case 5:
             checkFile(inputFile);
             cout << "With grades dropped? (Y/N)" << endl;
@@ -93,7 +93,7 @@ int main() {
             printClassSortedResults(calculatedClassPercentages);
             vector_dumptruck(calculatedPercentages, averageScores, calculatedClassPercentages, allGrades);
             break;
-        //empty for LAB8
+        // Display all students with total percentages above/below a certain threshold
         case 6:
             checkFile(inputFile);
             cout << "With grades dropped? (Y/N)" << endl;
@@ -112,7 +112,12 @@ int main() {
                 generateReportClass(inputFile, classSize, 1, allGrades, totalAssignmentsDropped, totalAssignments, 0, calculatedClassPercentages, averageScores);
             }
             inputFile.close();
-            threshScore(calculatedClassPercentages,threshold,compareSelect);
+            if(compareSelect == 1){
+                threshScore(calculatedClassPercentages,threshold,1);
+
+            } else if(compareSelect == 2){
+                threshScore(calculatedClassPercentages,threshold,0);
+            }
             printClassSortedResults(calculatedClassPercentages);
             vector_dumptruck(calculatedPercentages, averageScores, calculatedClassPercentages, allGrades);
             break;
@@ -132,3 +137,7 @@ int main() {
         }
     }while(userSelect != 8);
 }
+
+
+
+

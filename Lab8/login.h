@@ -68,7 +68,7 @@ void registration(void)
     cout << "Successfully registered!" << endl;
 }
 
-void login(void)
+int login(void)
 {
     vector<string> usernameBank, passwordBank;
     string mUsername, mPassword, username, password;
@@ -106,9 +106,9 @@ void login(void)
         {
             cout << "Password is incorrect. Please try again." << endl;
             attempt++;
-            if(attempt == 3){
+            if(attempt == 4){
                 cout << "Login failed. Returning to menu..." << endl;
-                break;
+                return 0;
             }
         }
     }
@@ -160,7 +160,7 @@ void setNewPassword(void)
 
 
 void user_login(void){
-    int userSelect, access, user;
+    int userSelect, access = 0;
     do{
         cout << "Choose an option:\n1. Register\n2. Login\n3. Change or forgot password" << endl;
         cin >> userSelect;
@@ -171,9 +171,13 @@ void user_login(void){
             break;
         
         case 2: 
-            login();
-            break;
-
+            if(!login()){
+                break;
+            } else{
+                access = 1;
+                break;
+            }
+            
         case 3: 
             setNewPassword();
             break;
@@ -182,6 +186,11 @@ void user_login(void){
             cout << "Error occurred. Please try again." << endl;
             break;
         }
-    }while(userSelect != 2);
+    }while(!access);
    
 }
+
+
+
+
+

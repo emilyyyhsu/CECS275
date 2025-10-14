@@ -91,8 +91,8 @@ void threshScore(vector<vector<double>> &calculatedClassPercentages, double thre
 
     // less than    
     }else if (!isHigh){
-        for(int i = 0; i < calculatedClassPercentages.size(); i++){
-            if(calculatedClassPercentages[i][6] <= threshold){
+        for(int i = calculatedClassPercentages.size(); i > 0; i--){
+            if(calculatedClassPercentages[i-1][5] <= threshold){
                 index = i;
                 break;
             }
@@ -489,15 +489,7 @@ void generateReportClass(fstream &inputFile, int classSize, int sortSelect, vect
     // }
     if (sortSelect == 1){
         getTotalPercentage(calculatedPercentages);
-        bubbleSort(calculatedPercentages);
-        for(int i = 0; i < calculatedPercentages.size(); i++){
-            for(int j = 0; j < calculatedPercentages[i].size(); j++){
-                    cout << calculatedPercentages[i][j] << " ";
-                
-            }
-            cout << endl;
-        }
-        
+        bubbleSort(calculatedPercentages);        
     }
     // cout << "AverageScores: " << endl;
     // for(double avgs : averageScores){
@@ -646,7 +638,7 @@ void printClassSortedResults(vector<vector<double>> calculatedClassPercentages){
     cout << "===============================================\n" << setw(25) << "SORTED CLASS RESULTS" << "\n";
     for (int i = 0; i < calculatedClassPercentages.size(); i++){
         letterGrade = getLetterGradeSorted(calculatedClassPercentages[i]);
-        cout << setw(7) <<  letterGrade << "       " << calculatedClassPercentages[i][5]<< endl;;
+        cout << "Student " << i+1 << ": " << setw(10) <<  letterGrade << "       " << fixed <<setprecision(2) << calculatedClassPercentages[i][5]*TO_PERCENT<< "%" << endl;;
     }
     
     cout << "===============================================\n" << endl;
